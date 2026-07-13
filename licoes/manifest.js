@@ -1,0 +1,137 @@
+/* AUTO-GERADO por build-mobile.py — não edite diretamente.
+   Para adicionar lições: crie licao-XX.json e rode: python build-mobile.py */
+window.LICOES_MANIFEST = [
+  {
+    "id": "licao-01-verbos-movimento",
+    "titulo": "Verbos de Movimento",
+    "modulo": 2,
+    "fonte": "Fundo de Bolsas 1-6-26 + 18-5",
+    "vocab": [
+      {
+        "id": "v-ba",
+        "heb": "בָּא",
+        "translit": "ba",
+        "pt": "vir (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-baa",
+        "heb": "בָּאָה",
+        "translit": "ba'a",
+        "pt": "vir (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-baim",
+        "heb": "בָּאִים",
+        "translit": "ba'im",
+        "pt": "vir (masc. pl.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-baot",
+        "heb": "בָּאוֹת",
+        "translit": "ba'ot",
+        "pt": "vir (fem. pl.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-holekh",
+        "heb": "הוֹלֵךְ",
+        "translit": "holekh",
+        "pt": "ir (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-holechet",
+        "heb": "הוֹלֶכֶת",
+        "translit": "holechet",
+        "pt": "ir (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-me",
+        "heb": "מִ",
+        "translit": "mi/me",
+        "pt": "de (preposição)",
+        "cat": "preposicoes"
+      },
+      {
+        "id": "v-le",
+        "heb": "לְ",
+        "translit": "le",
+        "pt": "para (preposição)",
+        "cat": "preposicoes"
+      },
+      {
+        "id": "v-po",
+        "heb": "פֹּה",
+        "translit": "po",
+        "pt": "aqui",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-sham",
+        "heb": "שָׁם",
+        "translit": "sham",
+        "pt": "lá",
+        "cat": "adverbios"
+      }
+    ],
+    "exercicios": [
+      {
+        "id": "ex-01-parear",
+        "tipo": "parear",
+        "instrucao": "Conecte cada forma verbal à sua tradução:",
+        "pares": [
+          [
+            "בָּא",
+            "vir (masc.)"
+          ],
+          [
+            "בָּאָה",
+            "vir (fem.)"
+          ],
+          [
+            "הוֹלֵךְ",
+            "ir (masc.)"
+          ],
+          [
+            "הוֹלֶכֶת",
+            "ir (fem.)"
+          ]
+        ]
+      },
+      {
+        "id": "ex-02-montar",
+        "tipo": "montar_frase",
+        "instrucao": "Monte a frase em hebraico:",
+        "frase_pt": "Ela vem da sala de aula",
+        "frase_heb": "הִיא בָּאָה מֵהַכִּיתָה",
+        "banco": [
+          "הִיא",
+          "בָּאָה",
+          "מֵהַכִּיתָה",
+          "הוּא",
+          "הוֹלֶכֶת",
+          "לַכִּיתָה",
+          "הוֹלֵךְ"
+        ]
+      },
+      {
+        "id": "ex-03-lacuna",
+        "tipo": "lacuna",
+        "instrucao": "Complete com o verbo correto:",
+        "template": "אֲנִי ___ לַבַּנְק",
+        "traducao": "Eu vou para o banco",
+        "opcoes": [
+          "הוֹלֵךְ",
+          "הוֹלֶכֶת",
+          "בָּאָה",
+          "בָּא"
+        ],
+        "resposta": "הוֹלֵךְ"
+      }
+    ]
+  }
+];

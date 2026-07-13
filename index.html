@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Hebraico">
+  <title>Hebraico</title>
+  <style>
+/* ── RESET & TOKENS ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:           #f4f1eb;
+  --card:         #ffffff;
+  --text:         #2c2416;
+  --muted:        #8a7f72;
+  --border:       #ddd5c4;
+  --primary:      #4a6741;
+  --primary-lt:   #e8f0e6;
+  --accent:       #7a5c2e;
+  --correct:      #3d7a3d;
+  --correct-lt:   #e6f4e6;
+  --wrong:        #b83030;
+  --wrong-lt:     #fce8e8;
+  --shadow:       0 2px 10px rgba(44,36,22,.10);
+  --r:            14px;
+  --heb:          'Frank Ruhl Libre', 'David Libre', Georgia, serif;
+  --ui:           -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ui);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ── SCREENS ─────────────────────────────────────────────────── */
+.screen {
+  display: none;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+.screen.active { display: flex; }
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+.hdr {
+  position: sticky; top: 0;
+  background: var(--bg);
+  padding: 14px 0 12px;
+  z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+.hdr h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: -.3px; }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--primary); font-size: 1.5rem;
+  padding: 2px 6px; line-height: 1;
+}
+
+/* ── HOME — lesson list ─────────────────────────────────────── */
+.section-label {
+  font-size: .75rem; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.lesson-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: transform .12s;
+}
+.lesson-card:active { transform: scale(.98); }
+
+.lc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.lc-title { font-size: 1rem; font-weight: 600; }
+.lc-meta  { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.lc-badge {
+  font-size: .72rem; background: var(--primary-lt); color: var(--primary);
+  padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 8px;
+}
+.lc-badge.done { background: #d4edda; color: #256030; }
+
+.pbar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.pbar-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width .4s; }
+.pbar-label { font-size: .75rem; color: var(--muted); margin-top: 5px; }
+
+/* ── LESSON SCREEN — progress strip ─────────────────────────── */
+.ex-strip { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.ex-strip .pbar { flex: 1; height: 8px; }
+.ex-count { font-size: .82rem; color: var(--muted); white-space: nowrap; }
+
+/* ── EXERCISE CARD ───────────────────────────────────────────── */
+.ex-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 22px 18px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ex-type-badge {
+  font-size: .68rem; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--muted);
+  margin-bottom: 10px;
+}
+.ex-question { font-size: 1rem; color: var(--muted); margin-bottom: 14px; }
+
+/* Hebrew typography */
+.heb-xl  { font-family: var(--heb); font-size: 2.8rem; direction: rtl; text-align: center; line-height: 1.25; margin: 10px 0; }
+.heb-lg  { font-family: var(--heb); font-size: 1.9rem; direction: rtl; text-align: center; line-height: 1.3; }
+.heb-md  { font-family: var(--heb); font-size: 1.4rem; direction: rtl; }
+.translit { text-align: center; font-size: .88rem; color: var(--muted); font-style: italic; margin-bottom: 6px; }
+
+/* ── MULTIPLE CHOICE ─────────────────────────────────────────── */
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+
+.opt {
+  min-height: 52px; padding: 10px 8px;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+  cursor: pointer; font-family: var(--ui); font-size: .95rem; color: var(--text);
+  line-height: 1.3; text-align: center;
+  transition: border-color .12s, background .12s;
+  display: flex; align-items: center; justify-content: center;
+}
+.opt.heb { font-family: var(--heb); font-size: 1.5rem; direction: rtl; }
+.opt:active { transform: scale(.97); }
+.opt.correct   { background: var(--correct-lt); border-color: var(--correct); color: var(--correct); }
+.opt.wrong     { background: var(--wrong-lt);   border-color: var(--wrong);   color: var(--wrong);   }
+.opt.show-ans  { background: var(--correct-lt); border-color: var(--correct); }
+.opt.disabled  { pointer-events: none; opacity: .5; }
+
+/* ── MONTAR FRASE ────────────────────────────────────────────── */
+.sentence-area {
+  min-height: 60px; background: var(--bg);
+  border: 2px dashed var(--border); border-radius: 10px;
+  padding: 10px 12px; display: flex; flex-wrap: wrap;
+  gap: 6px; align-items: center; direction: rtl;
+  margin-bottom: 12px; cursor: default;
+}
+.sentence-area.valid   { border-color: var(--correct); background: var(--correct-lt); }
+.sentence-area.invalid { border-color: var(--wrong);   background: var(--wrong-lt); }
+.sa-placeholder { color: var(--muted); font-size: .85rem; font-style: italic; }
+
+.word-bank { display: flex; flex-wrap: wrap; gap: 8px; direction: rtl; margin-bottom: 12px; }
+
+.tile {
+  padding: 8px 12px; background: var(--card);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: var(--heb); font-size: 1.25rem;
+  cursor: pointer; transition: all .1s; min-height: 44px;
+  display: flex; align-items: center;
+}
+.tile:active { transform: scale(.94); }
+.tile.placed {
+  background: var(--primary-lt); border-color: var(--primary);
+  font-size: 1.1rem; cursor: pointer;
+}
+.tile.used { opacity: .2; pointer-events: none; }
+
+/* ── LACUNA ──────────────────────────────────────────────────── */
+.lacuna-tmpl {
+  font-family: var(--heb); font-size: 1.65rem;
+  direction: rtl; text-align: center; line-height: 1.7;
+  margin: 10px 0 18px;
+}
+.blank-line {
+  display: inline-block; min-width: 70px; height: 2px;
+  background: var(--text); vertical-align: middle;
+  margin: 0 4px; position: relative; top: -7px;
+}
+.blank-filled {
+  display: inline-block; padding: 1px 10px;
+  border-radius: 5px; font-weight: 600;
+}
+.blank-filled.correct { background: var(--correct-lt); color: var(--correct); }
+.blank-filled.wrong   { background: var(--wrong-lt);   color: var(--wrong); }
+.blank-filled.neutral { background: var(--primary-lt); color: var(--primary); }
+
+/* ── PAREAR ──────────────────────────────────────────────────── */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.match-col  { display: flex; flex-direction: column; gap: 8px; }
+
+.match-item {
+  min-height: 50px; padding: 10px 8px;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+  cursor: pointer; text-align: center; font-size: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s; line-height: 1.2;
+}
+.match-item.heb { font-family: var(--heb); font-size: 1.4rem; direction: rtl; }
+.match-item:active { transform: scale(.97); }
+.match-item.selected  { border-color: var(--primary); background: var(--primary-lt); }
+.match-item.paired    { border-color: var(--correct); background: var(--correct-lt); pointer-events: none; }
+.match-item.wrong-pair{ border-color: var(--wrong);   background: var(--wrong-lt); }
+
+/* ── FEEDBACK BAR ────────────────────────────────────────────── */
+.feedback {
+  padding: 13px 16px; border-radius: var(--r); margin-bottom: 12px;
+  display: none; align-items: flex-start; gap: 12px;
+}
+.feedback.show { display: flex; }
+.feedback.correct { background: var(--correct-lt); border: 1.5px solid var(--correct); }
+.feedback.wrong   { background: var(--wrong-lt);   border: 1.5px solid var(--wrong); }
+.fb-icon  { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.fb-body  { flex: 1; }
+.fb-title { font-weight: 700; font-size: .95rem; }
+.fb-detail{ font-size: .84rem; color: var(--muted); margin-top: 3px; }
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn {
+  width: 100%; min-height: 52px; padding: 12px 20px;
+  border: none; border-radius: var(--r); font-family: var(--ui);
+  font-size: 1rem; font-weight: 600; cursor: pointer;
+  transition: all .12s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary  { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #3a5333; }
+.btn-check    { background: #e4dfd5; color: #3a3020; }
+.btn-off      { opacity: .4; pointer-events: none; }
+
+.action-area { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 14px; }
+
+/* ── RESULTS ─────────────────────────────────────────────────── */
+.results-hero { text-align: center; padding: 28px 16px; }
+.results-icon  { font-size: 3.5rem; display: block; margin-bottom: 10px; }
+.results-title { font-size: 1.45rem; font-weight: 700; margin-bottom: 4px; }
+.results-sub   { color: var(--muted); }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+.stat-n    { font-size: 1.85rem; font-weight: 700; color: var(--primary); }
+.stat-lbl  { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .heb-xl { font-size: 2.2rem; }
+  .opts   { grid-template-columns: 1fr; }
+  .match-grid { gap: 7px; }
+}
+  </style>
+  <!-- Loaded as <script> — works on file:// AND http:// (GitHub Pages) -->
+  <script src="licoes/manifest.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════ HOME ═══════════════════════════════ -->
+<div id="screen-home" class="screen active">
+  <div class="hdr"><h1>Hebraico</h1></div>
+  <div class="section-label">Lições</div>
+  <div id="lesson-list"></div>
+</div>
+
+<!-- ═══════════════════════ LESSON ═════════════════════════════ -->
+<div id="screen-lesson" class="screen">
+  <div class="hdr">
+    <button class="back-btn" id="btn-back" title="Voltar">←</button>
+    <h1 id="lesson-title">—</h1>
+  </div>
+  <div class="ex-strip">
+    <div class="pbar"><div class="pbar-fill" id="ex-pbar" style="width:0%"></div></div>
+    <span class="ex-count" id="ex-count">0 / 0</span>
+  </div>
+  <div class="ex-card"   id="ex-card"></div>
+  <div class="feedback"  id="feedback">
+    <span class="fb-icon"  id="fb-icon"></span>
+    <div  class="fb-body">
+      <div class="fb-title"  id="fb-title"></div>
+      <div class="fb-detail" id="fb-detail"></div>
+    </div>
+  </div>
+  <div class="action-area" id="action-area"></div>
+</div>
+
+<!-- ═══════════════════════ RESULTS ════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="hdr"><h1>Resultado</h1></div>
+  <div class="results-hero">
+    <span class="results-icon"  id="r-icon">🎉</span>
+    <div  class="results-title" id="r-title">Lição concluída!</div>
+    <div  class="results-sub"   id="r-sub"></div>
+  </div>
+  <div class="stat-grid" id="stat-grid"></div>
+  <div class="action-area">
+    <button class="btn btn-primary" id="btn-home">← Voltar às lições</button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   HEBRAICO TRAINER  v1.0
+   Motor de lições: múltipla escolha, montar frase, lacuna, parear
+   Spaced repetition: vocab global · exercícios locais por lição
+================================================================ */
+
+// ── CONFIG ────────────────────────────────────────────────────
+const VOCAB_KEY    = 'heb_trainer_vocab_v1';
+const LICOES_KEY   = 'heb_trainer_licoes_v1';
+const MASTERY_STK  = 5;   // streak mínimo para "dominado"
+
+// ── UTILS ─────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function $(id) { return document.getElementById(id); }
+
+// ── STORAGE ───────────────────────────────────────────────────
+const Store = {
+  vocab()  { try { return JSON.parse(localStorage.getItem(VOCAB_KEY))  || {}; } catch { return {}; } },
+  licoes() { try { return JSON.parse(localStorage.getItem(LICOES_KEY)) || {}; } catch { return {}; } },
+
+  saveVocab(d)  { localStorage.setItem(VOCAB_KEY,  JSON.stringify(d)); },
+  saveLicoes(d) { localStorage.setItem(LICOES_KEY, JSON.stringify(d)); },
+
+  recordVocab(id, correct) {
+    const d = this.vocab();
+    if (!d[id]) d[id] = { correct: 0, wrong: 0, streak: 0, mastered: false };
+    const e = d[id];
+    if (correct) { e.correct++; e.streak++; if (e.streak >= MASTERY_STK) e.mastered = true; }
+    else         { e.wrong++;   e.streak = 0; }
+    this.saveVocab(d);
+    return e;
+  },
+
+  recordExercise(licaoId, exId, correct) {
+    const d = this.licoes();
+    if (!d[licaoId])       d[licaoId]       = {};
+    if (!d[licaoId][exId]) d[licaoId][exId] = { correct: 0, wrong: 0 };
+    const e = d[licaoId][exId];
+    if (correct) e.correct++; else e.wrong++;
+    this.saveLicoes(d);
+    return e;
+  },
+
+  lessonMastery(lesson) {
+    if (!lesson.vocab?.length) return 0;
+    const v = this.vocab();
+    const n = lesson.vocab.filter(x => v[x.id]?.mastered).length;
+    return Math.round((n / lesson.vocab.length) * 100);
+  }
+};
+
+// ── QUEUE BUILDER ─────────────────────────────────────────────
+function priority(progress, mastered) {
+  if (mastered) return -1;
+  const { wrong = 0, correct = 0 } = progress || {};
+  if (!wrong && !correct) return 50;          // new
+  return 100 + wrong * 10 - correct;          // errors boost priority
+}
+
+function buildQueue(lesson) {
+  const vp  = Store.vocab();
+  const lp  = (Store.licoes())[lesson.id] || {};
+  const q   = [];
+
+  // Auto-generate multipla_escolha from vocab
+  for (const v of lesson.vocab) {
+    const p = vp[v.id] || {};
+    const m = !!p.mastered;
+    // heb → pt  (always, even if mastered — lower priority)
+    q.push({ uid: `v_${v.id}_hpt`, type: 'multipla_escolha', sub: 'vocab',
+             dir: 'heb_pt', vocab: v, _p: priority(p, m) });
+    // pt → heb  (skip if mastered)
+    if (!m) {
+      q.push({ uid: `v_${v.id}_pth`, type: 'multipla_escolha', sub: 'vocab',
+               dir: 'pt_heb', vocab: v, _p: priority(p, false) });
+    }
+  }
+
+  // Manual phrase exercises
+  for (const ex of (lesson.exercicios || [])) {
+    const p = lp[ex.id] || {};
+    q.push({ uid: `ex_${ex.id}`, type: ex.tipo, sub: 'phrase',
+             exercise: ex, licaoId: lesson.id, _p: priority(p, false) });
+  }
+
+  return q.sort((a, b) => b._p - a._p);
+}
+
+// ── DISTRACTORS ───────────────────────────────────────────────
+function distractors(vocab, dir, n = 3) {
+  const pool = shuffle(
+    (window.LICOES_MANIFEST || [])
+      .flatMap(l => l.vocab || [])
+      .filter(v => v.id !== vocab.id)
+  );
+  const field  = dir === 'heb_pt' ? 'pt' : 'heb';
+  const seen   = new Set([vocab[field]]);
+  const result = [];
+  for (const v of pool) {
+    if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
+    if (result.length >= n) break;
+  }
+  return result;
+}
+
+// ── RENDERERS ─────────────────────────────────────────────────
+const R = {
+
+  /* ── MULTIPLA ESCOLHA (vocab auto) ── */
+  multipla_escolha(item, card, actions) {
+    const { vocab, dir } = item;
+    const choices = shuffle([vocab, ...distractors(vocab, dir, 3)]);
+    let answered = false;
+
+    if (dir === 'heb_pt') {
+      card.innerHTML = `
+        <div class="ex-type-badge">Múltipla escolha</div>
+        <div class="ex-question">O que significa esta palavra?</div>
+        <div class="heb-xl">${vocab.heb}</div>
+        <div class="translit">${vocab.translit}</div>
+        <div class="opts" id="opts"></div>`;
+      choices.forEach(v => {
+        const b = document.createElement('button');
+        b.className = 'opt'; b.textContent = v.pt; b.dataset.id = v.id;
+        b.onclick = () => check(b, v.id === vocab.id, vocab.pt);
+        $('opts').appendChild(b);
+      });
+    } else {
+      card.innerHTML = `
+        <div class="ex-type-badge">Múltipla escolha</div>
+        <div class="ex-question">Qual é a palavra em hebraico?</div>
+        <div style="font-size:1.3rem;text-align:center;margin:16px 0;font-weight:600;">${vocab.pt}</div>
+        <div class="opts" id="opts"></div>`;
+      choices.forEach(v => {
+        const b = document.createElement('button');
+        b.className = 'opt heb'; b.textContent = v.heb; b.dataset.id = v.id;
+        b.onclick = () => check(b, v.id === vocab.id, vocab.heb);
+        $('opts').appendChild(b);
+      });
+    }
+
+    function check(btn, correct, correctText) {
+      if (answered) return;
+      answered = true;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        const ans = $('opts').querySelector(`[data-id="${vocab.id}"]`);
+        if (ans) ans.classList.add('show-ans');
+      }
+      $('opts').querySelectorAll('.opt').forEach(b => b.classList.add('disabled'));
+      App.recordAnswer(item, correct, correctText);
+    }
+  },
+
+  /* ── MONTAR FRASE ── */
+  montar_frase(item, card, actions) {
+    const { exercise } = item;
+    const bankWords = shuffle(exercise.banco);
+    let placed  = [];
+    let checked = false;
+
+    const render = () => {
+      card.innerHTML = `
+        <div class="ex-type-badge">Montar frase</div>
+        <div class="ex-question">${exercise.instrucao || 'Monte a frase em hebraico:'}</div>
+        <div style="font-size:.9rem;color:var(--muted);text-align:center;margin-bottom:10px;font-style:italic;">
+          "${exercise.frase_pt}"</div>
+        <div class="sentence-area" id="sa">
+          ${placed.length
+            ? placed.map((w, i) => `<span class="tile placed" data-i="${i}">${w}</span>`).join('')
+            : '<span class="sa-placeholder">Toque nas palavras abaixo ↓</span>'}
+        </div>
+        <div class="word-bank" id="wb">
+          ${bankWords.map((w, i) =>
+            `<span class="tile ${placed.includes(w) ? 'used' : ''}" data-bi="${i}">${w}</span>`
+          ).join('')}
+        </div>`;
+
+      // Bank → place
+      card.querySelectorAll('#wb .tile:not(.used)').forEach(t => {
+        t.onclick = () => { placed.push(t.textContent.trim()); render(); renderBtn(); };
+      });
+      // Placed → remove
+      card.querySelectorAll('#sa .tile').forEach(t => {
+        t.onclick = () => { placed.splice(+t.dataset.i, 1); render(); renderBtn(); };
+      });
+    };
+
+    const renderBtn = () => {
+      if (checked) return;
+      actions.innerHTML = '';
+      const b = document.createElement('button');
+      b.className = 'btn btn-check' + (placed.length ? '' : ' btn-off');
+      b.textContent = 'Verificar';
+      b.onclick = () => {
+        if (checked) return;
+        checked = true;
+        const ans   = placed.join(' ');
+        const ok    = ans === exercise.frase_heb;
+        const area  = card.querySelector('#sa');
+        if (area) area.classList.add(ok ? 'valid' : 'invalid');
+        App.recordAnswer(item, ok, exercise.frase_heb);
+      };
+      actions.appendChild(b);
+    };
+
+    render();
+    renderBtn();
+  },
+
+  /* ── LACUNA ── */
+  lacuna(item, card, actions) {
+    const { exercise } = item;
+    let answered = false;
+
+    const tmplHtml = (exercise.template || '').replace(
+      '___',
+      '<span class="blank-line" id="gap"></span>'
+    );
+
+    card.innerHTML = `
+      <div class="ex-type-badge">Complete a frase</div>
+      <div class="ex-question">${exercise.instrucao || 'Preencha a lacuna:'}</div>
+      ${exercise.traducao
+        ? `<div style="font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:8px;font-style:italic;">
+             "${exercise.traducao}"</div>` : ''}
+      <div class="lacuna-tmpl">${tmplHtml}</div>
+      <div class="opts" id="opts"></div>`;
+
+    (exercise.opcoes || []).forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'opt heb'; b.textContent = opt;
+      b.onclick = () => {
+        if (answered) return;
+        answered = true;
+        const ok = opt === exercise.resposta;
+        b.classList.add(ok ? 'correct' : 'wrong');
+        $('opts').querySelectorAll('.opt').forEach(x => {
+          if (x.textContent === exercise.resposta) x.classList.add('show-ans');
+          x.classList.add('disabled');
+        });
+        const gap = card.querySelector('#gap');
+        if (gap) gap.outerHTML =
+          `<span class="blank-filled ${ok ? 'correct' : 'wrong'}">${opt}</span>`;
+        App.recordAnswer(item, ok, exercise.resposta);
+      };
+      $('opts').appendChild(b);
+    });
+  },
+
+  /* ── PAREAR ── */
+  parear(item, card, actions) {
+    const { exercise } = item;
+    const pares = exercise.pares;
+
+    // Build shuffled index arrays (origIdx = index into pares[])
+    const leftOrder  = shuffle(pares.map((_, i) => i));
+    const rightOrder = shuffle(pares.map((_, i) => i));
+
+    let selLeft  = null;         // origIdx selected on left, or null
+    let userPairs = {};          // leftOrigIdx → rightOrigIdx
+    let correctness = {};        // leftOrigIdx → bool (set on verify)
+    let checked = false;
+
+    const isPairedLeft  = i => i in userPairs;
+    const isPairedRight = i => Object.values(userPairs).map(Number).includes(i);
+
+    const render = () => {
+      card.innerHTML = `
+        <div class="ex-type-badge">Conectar pares</div>
+        <div class="ex-question">${exercise.instrucao || 'Conecte cada item à sua tradução:'}</div>
+        <div class="match-grid">
+          <div class="match-col" id="col-l"></div>
+          <div class="match-col" id="col-r"></div>
+        </div>`;
+
+      const colL = $('col-l');
+      const colR = $('col-r');
+
+      leftOrder.forEach(origIdx => {
+        const div = document.createElement('div');
+        div.className = 'match-item heb';
+        div.textContent = pares[origIdx][0];
+        if (checked) {
+          div.classList.add(correctness[origIdx] ? 'paired' : 'wrong-pair');
+        } else if (isPairedLeft(origIdx)) {
+          div.classList.add('paired');
+        } else if (selLeft === origIdx) {
+          div.classList.add('selected');
+        } else {
+          div.onclick = () => {
+            selLeft = (selLeft === origIdx) ? null : origIdx;
+            render();
+          };
+        }
+        colL.appendChild(div);
+      });
+
+      rightOrder.forEach(origIdx => {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.textContent = pares[origIdx][1];
+        if (checked) {
+          const leftOwner = Object.entries(userPairs)
+            .find(([, r]) => Number(r) === origIdx);
+          if (leftOwner) div.classList.add(correctness[leftOwner[0]] ? 'paired' : 'wrong-pair');
+        } else if (isPairedRight(origIdx)) {
+          div.classList.add('paired');
+        } else if (selLeft !== null) {
+          div.onclick = () => {
+            userPairs[selLeft] = origIdx;
+            selLeft = null;
+            render(); updateVerifyBtn();
+          };
+        }
+        colR.appendChild(div);
+      });
+    };
+
+    const updateVerifyBtn = () => {
+      const b = actions.querySelector('.btn-check');
+      if (b) b.classList.toggle('btn-off', Object.keys(userPairs).length < pares.length);
+    };
+
+    actions.innerHTML = '';
+    const verifyBtn = document.createElement('button');
+    verifyBtn.className = 'btn btn-check btn-off';
+    verifyBtn.textContent = 'Verificar';
+    verifyBtn.onclick = () => {
+      if (checked) return;
+      checked = true;
+      let nCorrect = 0;
+      Object.entries(userPairs).forEach(([l, r]) => {
+        const ok = Number(l) === Number(r);
+        correctness[l] = ok;
+        if (ok) nCorrect++;
+      });
+      render();
+      App.recordAnswer(item, nCorrect === pares.length,
+        pares.map(p => `${p[0]} = ${p[1]}`).join(' · '));
+    };
+    actions.appendChild(verifyBtn);
+    render();
+  }
+};
+
+// ── APP ───────────────────────────────────────────────────────
+const App = {
+  lesson:  null,
+  queue:   [],
+  idx:     0,
+  sCorrect: 0,
+  sWrong:   0,
+
+  screen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+    window.scrollTo(0, 0);
+  },
+
+  /* HOME */
+  home() {
+    const lessons = window.LICOES_MANIFEST || [];
+    const list    = $('lesson-list');
+
+    if (!lessons.length) {
+      list.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px 0">
+        Nenhuma lição encontrada.<br>Verifique <code>licoes/manifest.js</code></p>`;
+      this.screen('screen-home'); return;
+    }
+
+    list.innerHTML = lessons.map(l => {
+      const pct  = Store.lessonMastery(l);
+      const tot  = l.vocab?.length || 0;
+      const mast = l.vocab?.filter(v => Store.vocab()[v.id]?.mastered).length || 0;
+      const done = pct === 100;
+      return `<div class="lesson-card" onclick="App.start('${l.id}')">
+        <div class="lc-top">
+          <div>
+            <div class="lc-title">${l.titulo}</div>
+            <div class="lc-meta">Módulo ${l.modulo} · ${tot} palavras</div>
+          </div>
+          <div class="lc-badge${done?' done':''}">${pct}% dominado</div>
+        </div>
+        <div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
+        <div class="pbar-label">${mast} de ${tot} palavras dominadas</div>
+      </div>`;
+    }).join('');
+
+    this.screen('screen-home');
+  },
+
+  /* START LESSON */
+  start(id) {
+    const l = (window.LICOES_MANIFEST || []).find(x => x.id === id);
+    if (!l) return;
+    this.lesson   = l;
+    this.queue    = buildQueue(l);
+    this.idx      = 0;
+    this.sCorrect = 0;
+    this.sWrong   = 0;
+    $('lesson-title').textContent = l.titulo;
+    this.screen('screen-lesson');
+    this.show();
+  },
+
+  /* SHOW EXERCISE */
+  show() {
+    if (this.idx >= this.queue.length) { this.results(); return; }
+
+    const item    = this.queue[this.idx];
+    const card    = $('ex-card');
+    const actions = $('action-area');
+    card.innerHTML = ''; actions.innerHTML = '';
+    this.hideFeedback();
+
+    const pct = Math.round((this.idx / this.queue.length) * 100);
+    $('ex-pbar').style.width = pct + '%';
+    $('ex-count').textContent = `${this.idx + 1} / ${this.queue.length}`;
+
+    const renderer = R[item.type];
+    if (renderer) renderer(item, card, actions);
+    else card.innerHTML = `<p>Tipo desconhecido: <code>${item.type}</code></p>`;
+  },
+
+  /* RECORD + ADVANCE */
+  recordAnswer(item, correct, correctText) {
+    if (correct) this.sCorrect++; else this.sWrong++;
+
+    if (item.sub === 'vocab') {
+      Store.recordVocab(item.vocab.id, correct);
+    } else {
+      Store.recordExercise(item.licaoId || this.lesson.id, item.exercise.id, correct);
+    }
+
+    this.showFeedback(correct, correctText);
+
+    // Replace whatever action buttons with "Próximo"
+    const actions = $('action-area');
+    actions.innerHTML = '';
+    const nb = document.createElement('button');
+    nb.className = 'btn btn-primary';
+    nb.textContent = (this.idx + 1 < this.queue.length) ? 'Próximo →' : 'Ver resultado';
+    nb.onclick = () => { this.idx++; this.show(); };
+    actions.appendChild(nb);
+  },
+
+  showFeedback(ok, txt) {
+    const fb = $('feedback');
+    fb.className = `feedback show ${ok ? 'correct' : 'wrong'}`;
+    $('fb-icon').textContent  = ok ? '✓' : '✗';
+    $('fb-title').textContent = ok ? 'Correto!' : 'Incorreto';
+    $('fb-detail').textContent = ok ? '' : `Resposta: ${txt}`;
+  },
+  hideFeedback() { $('feedback').className = 'feedback'; },
+
+  /* RESULTS */
+  results() {
+    const total  = this.sCorrect + this.sWrong;
+    const pct    = total ? Math.round((this.sCorrect / total) * 100) : 0;
+    const mastery = Store.lessonMastery(this.lesson);
+
+    $('r-icon').textContent  = pct >= 80 ? '🎉' : pct >= 50 ? '💪' : '📚';
+    $('r-title').textContent = pct >= 80 ? 'Excelente!' : pct >= 50 ? 'Bom progresso!' : 'Continue praticando!';
+    $('r-sub').textContent   = this.lesson.titulo;
+
+    $('stat-grid').innerHTML = [
+      [this.sCorrect, 'Acertos'],
+      [this.sWrong,   'Erros'],
+      [pct + '%',     'Aproveitamento'],
+      [mastery + '%', 'Vocab dominado']
+    ].map(([n, l]) => `
+      <div class="stat-card">
+        <div class="stat-n">${n}</div>
+        <div class="stat-lbl">${l}</div>
+      </div>`).join('');
+
+    this.screen('screen-results');
+  },
+
+  init() {
+    $('btn-back').onclick = () => {
+      if (confirm('Sair da lição? O progresso parcial foi salvo.')) this.home();
+    };
+    $('btn-home').onclick = () => this.home();
+    this.home();
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
