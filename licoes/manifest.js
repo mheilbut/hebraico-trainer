@@ -1,5 +1,6 @@
-/* AUTO-GERADO por build-mobile.py — não edite diretamente.
-   Para adicionar lições: crie licao-XX.json e rode: python build-mobile.py */
+/* AUTO-GERADO por build-mobile.py — nao edite diretamente.
+   Estrutura: licoes/aula-XX/aula-XX.json  e  licoes/revisao/licao-*.json
+   Para adicionar: crie a pasta + JSON e rode: python build-mobile.py */
 window.LICOES_MANIFEST = [
   {
     "id": "licao-01-verbos-movimento",
@@ -132,7 +133,8 @@ window.LICOES_MANIFEST = [
         ],
         "resposta": "הוֹלֵךְ"
       }
-    ]
+    ],
+    "status": "revisao"
   },
   {
     "id": "licao-02-lugares",
@@ -283,7 +285,8 @@ window.LICOES_MANIFEST = [
         ],
         "resposta": "בָּאוֹת"
       }
-    ]
+    ],
+    "status": "revisao"
   },
   {
     "id": "licao-03-tempo-horas",
@@ -449,7 +452,8 @@ window.LICOES_MANIFEST = [
         ],
         "resposta": "מָחָר"
       }
-    ]
+    ],
+    "status": "revisao"
   },
   {
     "id": "licao-04-acronimos-idiomas",
@@ -653,6 +657,7 @@ window.LICOES_MANIFEST = [
         ],
         "resposta": "פּוֹרְטוּגָלִית"
       }
-    ]
+    ],
+    "status": "revisao"
   }
 ];

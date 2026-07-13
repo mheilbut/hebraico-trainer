@@ -1,0 +1,205 @@
+{
+  "id": "licao-04-acronimos-idiomas",
+  "titulo": "Acrônimos e Idiomas",
+  "modulo": 2,
+  "fonte": "Fundo de Bolsas 8-6 + vocab acumulado",
+  "vocab": [
+    {
+      "id": "v-tanakh",
+      "heb": "תַּנַ״ךְ",
+      "translit": "tanakh",
+      "pt": "Bíblia Hebraica (Torah, Profetas, Escritos)",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-rambam",
+      "heb": "רַמְבַּ״ם",
+      "translit": "rambam",
+      "pt": "Maimônides (filósofo medieval)",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-tzahal",
+      "heb": "צַהַ״ל",
+      "translit": "tzahal",
+      "pt": "Exército de Defesa de Israel (IDF)",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-natbag",
+      "heb": "נָתְבַּ״ג",
+      "translit": "natbag",
+      "pt": "Aeroporto Ben Gurion (Tel Aviv)",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-hine",
+      "heb": "הִנֵּה",
+      "translit": "hine",
+      "pt": "olha aqui / eis",
+      "cat": "expressoes"
+    },
+    {
+      "id": "v-doctor",
+      "heb": "ד״ר",
+      "translit": "dctor",
+      "pt": "Doutor/a",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-beis",
+      "heb": "בֵּי״ס",
+      "translit": "beis",
+      "pt": "escola",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-chk",
+      "heb": "ח״כ",
+      "translit": "chk",
+      "pt": "Membro da Knesset (parlamentar)",
+      "cat": "acronimos"
+    },
+    {
+      "id": "v-ivrit",
+      "heb": "עִבְרִית",
+      "translit": "ivrit",
+      "pt": "hebraico",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-anglit",
+      "heb": "אַנְגְּלִית",
+      "translit": "anglit",
+      "pt": "inglês",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-aravit",
+      "heb": "עֲרָבִית",
+      "translit": "aravit",
+      "pt": "árabe",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-tzarfatit",
+      "heb": "צָרְפָתִית",
+      "translit": "tzarfatit",
+      "pt": "francês",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-germanit",
+      "heb": "גֶּרְמָנִית",
+      "translit": "germanit",
+      "pt": "alemão",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-sefardit",
+      "heb": "סְפָרַדִּית",
+      "translit": "sefardit",
+      "pt": "espanhol",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-portuguait",
+      "heb": "פּוֹרְטוּגָלִית",
+      "translit": "portuguait",
+      "pt": "português",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-yapanit",
+      "heb": "יַפָּנִית",
+      "translit": "yapanit",
+      "pt": "japonês",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-italkit",
+      "heb": "אִיטַלְקִית",
+      "translit": "italkit",
+      "pt": "italiano",
+      "cat": "idiomas"
+    },
+    {
+      "id": "v-holandit",
+      "heb": "הוֹלַנְדִּית",
+      "translit": "holandit",
+      "pt": "holandês",
+      "cat": "idiomas"
+    }
+  ],
+  "exercicios": [
+    {
+      "id": "ex-01-parear-acron",
+      "tipo": "parear",
+      "instrucao": "Conecte cada acrônimo ao seu significado:",
+      "pares": [
+        [
+          "תַּנַ״ךְ",
+          "Bíblia Hebraica"
+        ],
+        [
+          "צַהַ״ל",
+          "Exército de Israel (IDF)"
+        ],
+        [
+          "נָתְבַּ״ג",
+          "Aeroporto Ben Gurion"
+        ],
+        [
+          "ד״ר",
+          "Doutor/a"
+        ],
+        [
+          "ח״כ",
+          "Membro da Knesset"
+        ]
+      ]
+    },
+    {
+      "id": "ex-02-parear-idiomas",
+      "tipo": "parear",
+      "instrucao": "Conecte cada idioma à sua tradução:",
+      "pares": [
+        [
+          "עִבְרִית",
+          "hebraico"
+        ],
+        [
+          "עֲרָבִית",
+          "árabe"
+        ],
+        [
+          "סְפָרַדִּית",
+          "espanhol"
+        ],
+        [
+          "פּוֹרְטוּגָלִית",
+          "português"
+        ],
+        [
+          "יַפָּנִית",
+          "japonês"
+        ]
+      ]
+    },
+    {
+      "id": "ex-03-lacuna",
+      "tipo": "lacuna",
+      "instrucao": "Qual idioma se fala no Brasil?",
+      "template": "מְדַבְּרִים ___ בְּבְּרָזִיל",
+      "traducao": "Fala-se ___ no Brasil",
+      "opcoes": [
+        "פּוֹרְטוּגָלִית",
+        "סְפָרַדִּית",
+        "אַנְגְּלִית",
+        "עִבְרִית"
+      ],
+      "resposta": "פּוֹרְטוּגָלִית"
+    }
+  ],
+  "status": "revisao"
+}

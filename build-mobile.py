@@ -28,22 +28,40 @@ MOBILE_OUT  = SCRIPT_DIR / "hebraico-trainer-mobile.html"
 MANIFEST_JS = LICOES_DIR / "manifest.js"
 
 MANIFEST_HEADER = """\
-/* AUTO-GERADO por build-mobile.py — não edite diretamente.
-   Para adicionar lições: crie licao-XX.json e rode: python build-mobile.py */
+/* AUTO-GERADO por build-mobile.py — nao edite diretamente.
+   Estrutura: licoes/aula-XX/aula-XX.json  e  licoes/revisao/licao-*.json
+   Para adicionar: crie a pasta + JSON e rode: python build-mobile.py */
 """
+
+# Ordem de status para exibicao na tela inicial
+STATUS_ORDER = {"anterior": 0, "proxima": 1, "revisao": 2, "": 3}
 
 
 def load_lessons():
-    files = sorted(LICOES_DIR.glob("licao-*.json"))
-    if not files:
-        print("⚠  Nenhum arquivo licao-*.json encontrado em licoes/")
+    # Scan recursivo — ignora manifest.js e .gitkeep
+    all_files = [
+        f for f in sorted(LICOES_DIR.rglob("*.json"))
+        if f.name != "manifest.js"
+    ]
+    if not all_files:
+        print("Nenhum arquivo .json encontrado em licoes/")
         return []
     lessons = []
-    for f in files:
+    for f in all_files:
         with open(f, encoding="utf-8") as fp:
             data = json.load(fp)
         lessons.append(data)
-        print(f"   ✓ {f.name}  ({len(data.get('vocab', []))} vocab, {len(data.get('exercicios', []))} exercícios)")
+        status = data.get("status", "")
+        aula   = data.get("aula", "")
+        label  = f"aula {aula}" if aula else status or "revisao"
+        print(f"   + {f.parent.name}/{f.name}  [{label}]  "
+              f"({len(data.get('vocab', []))} vocab)")
+    # Ordena: anterior → proxima → revisao; dentro de cada grupo por aula ou id
+    lessons.sort(key=lambda d: (
+        STATUS_ORDER.get(d.get("status", ""), 9),
+        d.get("aula", 999),
+        d.get("id", "")
+    ))
     return lessons
 
 

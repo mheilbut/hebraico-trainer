@@ -76,6 +76,27 @@ html, body {
   margin-bottom: 12px;
 }
 
+/* ── HOME SECTIONS ───────────────────────────────────────────── */
+.section-hdr {
+  display: flex; align-items: center; gap: 8px;
+  margin: 20px 0 10px; padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border);
+}
+.section-hdr:first-child { margin-top: 0; }
+.section-hdr .s-icon { font-size: 1rem; }
+.section-hdr .s-title {
+  font-size: .78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em;
+}
+.section-hdr.anterior .s-title { color: #7a5020; }
+.section-hdr.proxima  .s-title { color: #264d7a; }
+.section-hdr.revisao  .s-title { color: var(--muted); }
+
+.lesson-card.anterior { border-left: 3px solid #c8841a; }
+.lesson-card.proxima  { border-left: 3px solid #3a6fa8; }
+.lc-badge.anterior { background: #fef3e2; color: #7a5020; }
+.lc-badge.proxima  { background: #e8f0fa; color: #264d7a; }
+
 .lesson-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -679,8 +700,8 @@ const App = {
 
   /* HOME */
   home() {
-    const lessons = window.LICOES_MANIFEST || [];
-    const list    = $('lesson-list');
+    const lessons  = window.LICOES_MANIFEST || [];
+    const list     = $('lesson-list');
 
     if (!lessons.length) {
       list.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px 0">
@@ -688,23 +709,43 @@ const App = {
       this.screen('screen-home'); return;
     }
 
-    list.innerHTML = lessons.map(l => {
-      const pct  = Store.lessonMastery(l);
-      const tot  = l.vocab?.length || 0;
-      const mast = l.vocab?.filter(v => Store.vocab()[v.id]?.mastered).length || 0;
-      const done = pct === 100;
-      return `<div class="lesson-card" onclick="App.start('${l.id}')">
+    const card = (l) => {
+      const status = l.status || 'revisao';
+      const pct    = Store.lessonMastery(l);
+      const tot    = l.vocab?.length || 0;
+      const mast   = (l.vocab || []).filter(v => Store.vocab()[v.id]?.mastered).length;
+      const done   = pct === 100;
+      const aulaMeta = l.aula ? ` · Aula ${l.aula}` : '';
+      const badgeCls = done ? 'done' : status !== 'revisao' ? status : '';
+      return `<div class="lesson-card ${status}" onclick="App.start('${l.id}')">
         <div class="lc-top">
           <div>
             <div class="lc-title">${l.titulo}</div>
-            <div class="lc-meta">Módulo ${l.modulo} · ${tot} palavras</div>
+            <div class="lc-meta">Módulo ${l.modulo}${aulaMeta} · ${tot} palavras</div>
           </div>
-          <div class="lc-badge${done?' done':''}">${pct}% dominado</div>
+          <div class="lc-badge ${badgeCls}">${pct}% dominado</div>
         </div>
         <div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
         <div class="pbar-label">${mast} de ${tot} palavras dominadas</div>
       </div>`;
-    }).join('');
+    };
+
+    const section = (cls, icon, label, items) => {
+      if (!items.length) return '';
+      return `<div class="section-hdr ${cls}">
+        <span class="s-icon">${icon}</span>
+        <span class="s-title">${label}</span>
+      </div>` + items.map(card).join('');
+    };
+
+    const anterior = lessons.filter(l => l.status === 'anterior');
+    const proxima  = lessons.filter(l => l.status === 'proxima');
+    const revisao  = lessons.filter(l => !l.status || l.status === 'revisao');
+
+    list.innerHTML =
+      section('anterior', '📖', 'Revisar — Aula Anterior', anterior) +
+      section('proxima',  '🔜', 'Preparar — Próxima Aula', proxima) +
+      section('revisao',  '◎',  'Revisão Geral',            revisao);
 
     this.screen('screen-home');
   },

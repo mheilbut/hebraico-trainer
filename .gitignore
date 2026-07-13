@@ -3,3 +3,15 @@ __pycache__/
 hebraico-trainer-mobile.html
 .DS_Store
 Thumbs.db
+
+# Material-fonte nas pastas de aula (fotos, PDFs, docs) — nao vai para o git
+licoes/**/*.pdf
+licoes/**/*.PDF
+licoes/**/*.jpg
+licoes/**/*.jpeg
+licoes/**/*.png
+licoes/**/*.JPG
+licoes/**/*.PNG
+licoes/**/*.docx
+licoes/**/*.doc
+licoes/**/*.pages
