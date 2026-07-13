@@ -1,0 +1,51 @@
+{
+  "id": "licao-02-lugares",
+  "titulo": "Lugares e Destinos",
+  "modulo": 2,
+  "fonte": "Fundo de Bolsas 18-5 + vocab acumulado",
+  "vocab": [
+    { "id": "v-bank",        "heb": "בַּנְק",           "translit": "bank",       "pt": "banco",             "cat": "lugares" },
+    { "id": "v-shuk",        "heb": "שׁוּק",            "translit": "shuk",       "pt": "mercado",           "cat": "lugares" },
+    { "id": "v-malon",       "heb": "מָלוֹן",           "translit": "malon",      "pt": "hotel",             "cat": "lugares" },
+    { "id": "v-universita",  "heb": "אוּנִיבֶרְסִיטָה", "translit": "universita", "pt": "universidade",      "cat": "lugares" },
+    { "id": "v-misada",      "heb": "מִסְעָדָה",        "translit": "misada",     "pt": "restaurante",       "cat": "lugares" },
+    { "id": "v-ulpan",       "heb": "אוּלְפַּן",        "translit": "ulpan",      "pt": "escola de hebraico","cat": "lugares" },
+    { "id": "v-kita",        "heb": "כִּיתָּה",          "translit": "kita",       "pt": "sala de aula",      "cat": "lugares" },
+    { "id": "v-bayit",       "heb": "בַּיִת",           "translit": "bayit",      "pt": "casa",              "cat": "lugares" },
+    { "id": "v-ir",          "heb": "עִיר",             "translit": "ir",         "pt": "cidade",            "cat": "lugares" },
+    { "id": "v-rechov",      "heb": "רְחוֹב",           "translit": "rechov",     "pt": "rua",               "cat": "lugares" },
+    { "id": "v-kanyon",      "heb": "קַנְיוֹן",         "translit": "kanyon",     "pt": "shopping",          "cat": "lugares" },
+    { "id": "v-gan",         "heb": "גַּן",             "translit": "gan",        "pt": "jardim / parque",   "cat": "lugares" }
+  ],
+  "exercicios": [
+    {
+      "id": "ex-01-parear",
+      "tipo": "parear",
+      "instrucao": "Conecte cada lugar à sua tradução:",
+      "pares": [
+        ["בַּנְק",     "banco"],
+        ["מִסְעָדָה", "restaurante"],
+        ["מָלוֹן",    "hotel"],
+        ["בַּיִת",    "casa"],
+        ["גַּן",      "jardim / parque"]
+      ]
+    },
+    {
+      "id": "ex-02-montar",
+      "tipo": "montar_frase",
+      "instrucao": "Monte a frase em hebraico:",
+      "frase_pt": "Ele vem do hotel",
+      "frase_heb": "הוּא בָּא מֵהַמָּלוֹן",
+      "banco": ["הוּא", "בָּא", "מֵהַמָּלוֹן", "הִיא", "בָּאָה", "לַמָּלוֹן", "מֵהַבַּיִת"]
+    },
+    {
+      "id": "ex-03-lacuna",
+      "tipo": "lacuna",
+      "instrucao": "Complete com a forma verbal correta:",
+      "template": "הֵן ___ מֵהַמִּסְעָדָה",
+      "traducao": "Elas vêm do restaurante",
+      "opcoes": ["בָּאוֹת", "בָּאִים", "הוֹלֶכֶת", "בָּאָה"],
+      "resposta": "בָּאוֹת"
+    }
+  ]
+}

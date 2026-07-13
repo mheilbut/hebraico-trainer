@@ -1,0 +1,53 @@
+{
+  "id": "licao-03-tempo-horas",
+  "titulo": "Tempo e Horas",
+  "modulo": 2,
+  "fonte": "vocab acumulado — categoria horas",
+  "vocab": [
+    { "id": "v-shaah",      "heb": "שָׁעָה",      "translit": "sha'ah",    "pt": "hora",           "cat": "tempo" },
+    { "id": "v-daka",       "heb": "דַּקָּה",      "translit": "daka",      "pt": "minuto",         "cat": "tempo" },
+    { "id": "v-shaniya",    "heb": "שְׁנִיָּה",    "translit": "shaniya",   "pt": "segundo",        "cat": "tempo" },
+    { "id": "v-boker",      "heb": "בֹּקֶר",      "translit": "boker",     "pt": "manhã",          "cat": "tempo" },
+    { "id": "v-tzahoraim",  "heb": "צָהֳרַיִם",   "translit": "tzahoraim", "pt": "tarde / meio-dia","cat": "tempo" },
+    { "id": "v-erev",       "heb": "עֶרֶב",       "translit": "erev",      "pt": "entardecer",     "cat": "tempo" },
+    { "id": "v-layla",      "heb": "לַיְלָה",     "translit": "layla",     "pt": "noite",          "cat": "tempo" },
+    { "id": "v-yom",        "heb": "יוֹם",        "translit": "yom",       "pt": "dia",            "cat": "tempo" },
+    { "id": "v-shavua",     "heb": "שָׁבוּעַ",    "translit": "shavua",    "pt": "semana",         "cat": "tempo" },
+    { "id": "v-chodesh",    "heb": "חֹדֶשׁ",      "translit": "chodesh",   "pt": "mês",            "cat": "tempo" },
+    { "id": "v-shana",      "heb": "שָׁנָה",      "translit": "shana",     "pt": "ano",            "cat": "tempo" },
+    { "id": "v-achshav",    "heb": "עַכְשָׁיו",   "translit": "achshav",   "pt": "agora",          "cat": "tempo" },
+    { "id": "v-etmol",      "heb": "אֶתְמוֹל",    "translit": "etmol",     "pt": "ontem",          "cat": "tempo" },
+    { "id": "v-machar",     "heb": "מָחָר",       "translit": "machar",    "pt": "amanhã",         "cat": "tempo" }
+  ],
+  "exercicios": [
+    {
+      "id": "ex-01-parear",
+      "tipo": "parear",
+      "instrucao": "Conecte cada palavra de tempo à sua tradução:",
+      "pares": [
+        ["בֹּקֶר",    "manhã"],
+        ["עֶרֶב",    "entardecer"],
+        ["לַיְלָה",  "noite"],
+        ["אֶתְמוֹל", "ontem"],
+        ["מָחָר",    "amanhã"]
+      ]
+    },
+    {
+      "id": "ex-02-montar",
+      "tipo": "montar_frase",
+      "instrucao": "Monte a frase em hebraico:",
+      "frase_pt": "Ela vem amanhã de manhã",
+      "frase_heb": "הִיא בָּאָה מָחָר בַּבֹּקֶר",
+      "banco": ["הִיא", "בָּאָה", "מָחָר", "בַּבֹּקֶר", "הוּא", "בָּא", "אֶתְמוֹל", "בַּלַּיְלָה"]
+    },
+    {
+      "id": "ex-03-lacuna",
+      "tipo": "lacuna",
+      "instrucao": "Complete a sequência:",
+      "template": "אֶתְמוֹל, הַיּוֹם, וְ___",
+      "traducao": "Ontem, hoje e ___",
+      "opcoes": ["מָחָר", "בֹּקֶר", "לַיְלָה", "שָׁנָה"],
+      "resposta": "מָחָר"
+    }
+  ]
+}
