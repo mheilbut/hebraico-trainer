@@ -1,0 +1,185 @@
+{
+  "id": "aula-05-presente-demonstrativos",
+  "titulo": "Presente e Demonstrativos",
+  "modulo": 3,
+  "aula": 5,
+  "status": "anterior",
+  "fonte": "Livro pp. 100-104",
+  "vocab": [
+    {
+      "id": "v-ze",
+      "heb": "זֶה",
+      "translit": "ze",
+      "pt": "este / isso (masc.)",
+      "cat": "demonstrativos"
+    },
+    {
+      "id": "v-zot",
+      "heb": "זֹאת",
+      "translit": "zot",
+      "pt": "esta / isso (fem.)",
+      "cat": "demonstrativos"
+    },
+    {
+      "id": "v-ele",
+      "heb": "אֵלֶּה",
+      "translit": "ele",
+      "pt": "estes / estas (pl.)",
+      "cat": "demonstrativos"
+    },
+    {
+      "id": "v-yesh",
+      "heb": "יֵשׁ",
+      "translit": "yesh",
+      "pt": "há / tem",
+      "cat": "existencial"
+    },
+    {
+      "id": "v-ain",
+      "heb": "אֵין",
+      "translit": "ain",
+      "pt": "não há / não tem",
+      "cat": "existencial"
+    },
+    {
+      "id": "v-lomed",
+      "heb": "לוֹמֵד",
+      "translit": "lomed",
+      "pt": "aprende / estuda (masc. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-lomedet",
+      "heb": "לוֹמֶדֶת",
+      "translit": "lomedet",
+      "pt": "aprende / estuda (fem. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-lomdim",
+      "heb": "לוֹמְדִים",
+      "translit": "lomdim",
+      "pt": "aprendem / estudam (masc. pl.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-lomdot",
+      "heb": "לוֹמְדוֹת",
+      "translit": "lomdot",
+      "pt": "aprendem / estudam (fem. pl.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-ose",
+      "heb": "עוֹשֶׂה",
+      "translit": "ose",
+      "pt": "faz (masc. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-osa",
+      "heb": "עוֹשָׂה",
+      "translit": "osa",
+      "pt": "faz (fem. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-yodea",
+      "heb": "יוֹדֵעַ",
+      "translit": "yodea",
+      "pt": "sabe / conhece (masc. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-yodaat",
+      "heb": "יוֹדַעַת",
+      "translit": "yodaat",
+      "pt": "sabe / conhece (fem. sing.)",
+      "cat": "verbos"
+    },
+    {
+      "id": "v-shel",
+      "heb": "שֶׁל",
+      "translit": "shel",
+      "pt": "de / pertencente a",
+      "cat": "preposicoes"
+    },
+    {
+      "id": "v-im",
+      "heb": "עִם",
+      "translit": "im",
+      "pt": "com",
+      "cat": "preposicoes"
+    },
+    {
+      "id": "v-makhshev",
+      "heb": "מַחְשֵׁב",
+      "translit": "makhshev",
+      "pt": "computador",
+      "cat": "substantivos"
+    },
+    {
+      "id": "v-sefer",
+      "heb": "סֵפֶר",
+      "translit": "sefer",
+      "pt": "livro",
+      "cat": "substantivos"
+    }
+  ],
+  "exercicios": [
+    {
+      "id": "ex-01-parear-conjugacao",
+      "tipo": "parear",
+      "instrucao": "Conecte a forma verbal ao sujeito correspondente:",
+      "pares": [
+        ["לוֹמֵד", "הוּא / אַתָּה / אֲנִי (masc.)"],
+        ["לוֹמֶדֶת", "הִיא / אַתְּ / אֲנִי (fem.)"],
+        ["לוֹמְדִים", "הֵם / אַתֶּם / אֲנַחְנוּ (masc.)"],
+        ["לוֹמְדוֹת", "הֵן / אַתֶּן / אֲנַחְנוּ (fem.)"]
+      ]
+    },
+    {
+      "id": "ex-02-parear-demonstrativos",
+      "tipo": "parear",
+      "instrucao": "זֶה, זֹאת ou אֵלֶּה? Conecte o substantivo ao demonstrativo correto:",
+      "pares": [
+        ["מַחְשֵׁב", "זֶה"],
+        ["עוּגָה", "זֹאת"],
+        ["יַלְדָּה", "זֹאת"],
+        ["בַּיִת", "זֶה"],
+        ["סְפָרִים", "אֵלֶּה"]
+      ]
+    },
+    {
+      "id": "ex-03-lacuna-yesh-ain",
+      "tipo": "lacuna",
+      "instrucao": "Complete com יֵשׁ ou אֵין:",
+      "template": "בַּגָּלִיל ___ הָרִים, אֲבָל בְּתֵל אָבִיב ___ הָרִים",
+      "traducao": "Na Galileia há montanhas, mas em Tel Aviv não há montanhas",
+      "opcoes": [
+        "יֵשׁ ... אֵין",
+        "אֵין ... יֵשׁ",
+        "יֵשׁ ... יֵשׁ",
+        "אֵין ... אֵין"
+      ],
+      "resposta": "יֵשׁ ... אֵין"
+    },
+    {
+      "id": "ex-04-montar-presente",
+      "tipo": "montar_frase",
+      "instrucao": "Monte a frase em hebraico:",
+      "frase_pt": "Ela estuda hebraico no ulpan",
+      "frase_heb": "הִיא לוֹמֶדֶת עִבְרִית בָּאוּלְפָּן",
+      "banco": [
+        "הִיא",
+        "לוֹמֶדֶת",
+        "עִבְרִית",
+        "בָּאוּלְפָּן",
+        "הוּא",
+        "לוֹמֵד",
+        "בַּבַּיִת",
+        "עִם"
+      ]
+    }
+  ]
+}
