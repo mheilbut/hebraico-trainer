@@ -46,6 +46,20 @@ window.LICOES_MANIFEST = [
         "cat": "existencial"
       },
       {
+        "id": "v-yesh-li",
+        "heb": "יֵשׁ לִי",
+        "translit": "yesh li",
+        "pt": "eu tenho",
+        "cat": "existencial"
+      },
+      {
+        "id": "v-ain-li",
+        "heb": "אֵין לִי",
+        "translit": "ain li",
+        "pt": "eu não tenho",
+        "cat": "existencial"
+      },
+      {
         "id": "v-lomed",
         "heb": "לוֹמֵד",
         "translit": "lomed",
@@ -102,6 +116,132 @@ window.LICOES_MANIFEST = [
         "cat": "verbos"
       },
       {
+        "id": "v-ohev",
+        "heb": "אוֹהֵב",
+        "translit": "ohev",
+        "pt": "ama / gosta (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-ohevet",
+        "heb": "אוֹהֶבֶת",
+        "translit": "ohevet",
+        "pt": "ama / gosta (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-shote",
+        "heb": "שׁוֹתֶה",
+        "translit": "shote",
+        "pt": "bebe (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-shota",
+        "heb": "שׁוֹתָה",
+        "translit": "shota",
+        "pt": "bebe (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-kore",
+        "heb": "קוֹרֵא",
+        "translit": "kore",
+        "pt": "lê (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-koret",
+        "heb": "קוֹרֵאת",
+        "translit": "koret",
+        "pt": "lê (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-kotev",
+        "heb": "כּוֹתֵב",
+        "translit": "kotev",
+        "pt": "escreve (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-kotevet",
+        "heb": "כּוֹתֶבֶת",
+        "translit": "kotevet",
+        "pt": "escreve (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-medaber",
+        "heb": "מְדַבֵּר",
+        "translit": "medaber",
+        "pt": "fala (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-medaberet",
+        "heb": "מְדַבֶּרֶת",
+        "translit": "medaberet",
+        "pt": "fala (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-gar",
+        "heb": "גָּר",
+        "translit": "gar",
+        "pt": "mora / reside (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-gara",
+        "heb": "גָּרָה",
+        "translit": "gara",
+        "pt": "mora / reside (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-rotse",
+        "heb": "רוֹצֶה",
+        "translit": "rotse",
+        "pt": "quer (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-rotsa",
+        "heb": "רוֹצָה",
+        "translit": "rotsa",
+        "pt": "quer (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-okhel",
+        "heb": "אוֹכֵל",
+        "translit": "okhel",
+        "pt": "come (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-okhelet",
+        "heb": "אוֹכֶלֶת",
+        "translit": "okhelet",
+        "pt": "come (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-khoshev",
+        "heb": "חוֹשֵׁב",
+        "translit": "khoshev",
+        "pt": "pensa / acha (masc. sing.)",
+        "cat": "verbos"
+      },
+      {
+        "id": "v-khoshevet",
+        "heb": "חוֹשֶׁבֶת",
+        "translit": "khoshevet",
+        "pt": "pensa / acha (fem. sing.)",
+        "cat": "verbos"
+      },
+      {
         "id": "v-shel",
         "heb": "שֶׁל",
         "translit": "shel",
@@ -116,6 +256,118 @@ window.LICOES_MANIFEST = [
         "cat": "preposicoes"
       },
       {
+        "id": "v-al",
+        "heb": "עַל",
+        "translit": "al",
+        "pt": "sobre / a respeito de",
+        "cat": "preposicoes"
+      },
+      {
+        "id": "v-mi",
+        "heb": "מִי",
+        "translit": "mi",
+        "pt": "quem",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-ma",
+        "heb": "מָה",
+        "translit": "ma",
+        "pt": "o quê / qual",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-eifo",
+        "heb": "אֵיפֹה",
+        "translit": "eifo",
+        "pt": "onde",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-lean",
+        "heb": "לְאָן",
+        "translit": "le'an",
+        "pt": "para onde",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-meayin",
+        "heb": "מֵאַיִן",
+        "translit": "me'ayin",
+        "pt": "de onde",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-matai",
+        "heb": "מָתַי",
+        "translit": "matai",
+        "pt": "quando",
+        "cat": "perguntas"
+      },
+      {
+        "id": "v-gam",
+        "heb": "גַּם",
+        "translit": "gam",
+        "pt": "também",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-rak",
+        "heb": "רַק",
+        "translit": "rak",
+        "pt": "só / apenas",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-aval",
+        "heb": "אֲבָל",
+        "translit": "aval",
+        "pt": "mas / porém",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-meod",
+        "heb": "מְאֹד",
+        "translit": "me'od",
+        "pt": "muito",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-lo",
+        "heb": "לֹא",
+        "translit": "lo",
+        "pt": "não",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-ken",
+        "heb": "כֵּן",
+        "translit": "ken",
+        "pt": "sim",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-kvar",
+        "heb": "כְּבָר",
+        "translit": "kvar",
+        "pt": "já",
+        "cat": "adverbios"
+      },
+      {
+        "id": "v-reva",
+        "heb": "רֶבַע",
+        "translit": "reva",
+        "pt": "quarto de hora (15 min)",
+        "cat": "tempo"
+      },
+      {
+        "id": "v-khetsi",
+        "heb": "חֵצִי",
+        "translit": "khetsi",
+        "pt": "metade / e meia",
+        "cat": "tempo"
+      },
+      {
         "id": "v-makhshev",
         "heb": "מַחְשֵׁב",
         "translit": "makhshev",
@@ -127,6 +379,146 @@ window.LICOES_MANIFEST = [
         "heb": "סֵפֶר",
         "translit": "sefer",
         "pt": "livro",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-miktav",
+        "heb": "מִכְתָּב",
+        "translit": "miktav",
+        "pt": "carta",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-more",
+        "heb": "מוֹרֶה",
+        "translit": "more",
+        "pt": "professor/a (masc.)",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-mora",
+        "heb": "מוֹרָה",
+        "translit": "mora",
+        "pt": "professora (fem.)",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-talmid",
+        "heb": "תַּלְמִיד",
+        "translit": "talmid",
+        "pt": "aluno",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-talmida",
+        "heb": "תַּלְמִידָה",
+        "translit": "talmida",
+        "pt": "aluna",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-khaver",
+        "heb": "חָבֵר",
+        "translit": "khaver",
+        "pt": "amigo / colega (masc.)",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-khavera",
+        "heb": "חֲבֵרָה",
+        "translit": "khavera",
+        "pt": "amiga / colega (fem.)",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-mishpakha",
+        "heb": "מִשְׁפָּחָה",
+        "translit": "mishpakha",
+        "pt": "família",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-yeled",
+        "heb": "יֶלֶד",
+        "translit": "yeled",
+        "pt": "menino / criança",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-yalda",
+        "heb": "יַלְדָּה",
+        "translit": "yalda",
+        "pt": "menina",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-ish",
+        "heb": "אִישׁ",
+        "translit": "ish",
+        "pt": "homem / marido",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-isha",
+        "heb": "אִשָּׁה",
+        "translit": "isha",
+        "pt": "mulher / esposa",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-sfariya",
+        "heb": "סְפָרִיָּה",
+        "translit": "sfariya",
+        "pt": "biblioteca",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-binyan",
+        "heb": "בִּנְיָן",
+        "translit": "binyan",
+        "pt": "prédio / edifício",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-uga",
+        "heb": "עוּגָה",
+        "translit": "uga",
+        "pt": "bolo",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-matana",
+        "heb": "מַתָּנָה",
+        "translit": "matana",
+        "pt": "presente / brinde",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-har",
+        "heb": "הַר",
+        "translit": "har",
+        "pt": "montanha",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-yam",
+        "heb": "יָם",
+        "translit": "yam",
+        "pt": "mar",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-degel",
+        "heb": "דֶּגֶל",
+        "translit": "degel",
+        "pt": "bandeira",
+        "cat": "substantivos"
+      },
+      {
+        "id": "v-kibutz",
+        "heb": "קִיבּוּץ",
+        "translit": "kibutz",
+        "pt": "kibutz",
         "cat": "substantivos"
       }
     ],
@@ -157,7 +549,7 @@ window.LICOES_MANIFEST = [
       {
         "id": "ex-02-parear-demonstrativos",
         "tipo": "parear",
-        "instrucao": "זֶה, זֹאת ou אֵלֶּה? Conecte o substantivo ao demonstrativo correto:",
+        "instrucao": "זֶה, זֹאת ou אֵלֶּה? Conecte ao demonstrativo correto:",
         "pares": [
           [
             "מַחְשֵׁב",
@@ -172,7 +564,7 @@ window.LICOES_MANIFEST = [
             "זֹאת"
           ],
           [
-            "בַּיִת",
+            "בִּנְיָן",
             "זֶה"
           ],
           [
@@ -182,7 +574,48 @@ window.LICOES_MANIFEST = [
         ]
       },
       {
-        "id": "ex-03-lacuna-yesh-ain",
+        "id": "ex-03-parear-verbos",
+        "tipo": "parear",
+        "instrucao": "Conecte o verbo ao seu significado:",
+        "pares": [
+          [
+            "כּוֹתֵב",
+            "escreve"
+          ],
+          [
+            "קוֹרֵא",
+            "lê"
+          ],
+          [
+            "מְדַבֵּר",
+            "fala"
+          ],
+          [
+            "שׁוֹתֶה",
+            "bebe"
+          ],
+          [
+            "אוֹהֵב",
+            "ama / gosta"
+          ]
+        ]
+      },
+      {
+        "id": "ex-04-lacuna-pergunta",
+        "tipo": "lacuna",
+        "instrucao": "Escolha a palavra interrogativa correta:",
+        "template": "___ אַתָּה הוֹלֵךְ?",
+        "traducao": "___ você vai?",
+        "opcoes": [
+          "לְאָן",
+          "מֵאַיִן",
+          "מִי",
+          "אֵיפֹה"
+        ],
+        "resposta": "לְאָן"
+      },
+      {
+        "id": "ex-05-lacuna-yesh-ain",
         "tipo": "lacuna",
         "instrucao": "Complete com יֵשׁ ou אֵין:",
         "template": "בַּגָּלִיל ___ הָרִים, אֲבָל בְּתֵל אָבִיב ___ הָרִים",
@@ -196,20 +629,20 @@ window.LICOES_MANIFEST = [
         "resposta": "יֵשׁ ... אֵין"
       },
       {
-        "id": "ex-04-montar-presente",
+        "id": "ex-06-montar-frase",
         "tipo": "montar_frase",
         "instrucao": "Monte a frase em hebraico:",
-        "frase_pt": "Ela estuda hebraico no ulpan",
-        "frase_heb": "הִיא לוֹמֶדֶת עִבְרִית בָּאוּלְפָּן",
+        "frase_pt": "Ele escreve uma carta para o amigo",
+        "frase_heb": "הוּא כּוֹתֵב מִכְתָּב לַחָבֵר",
         "banco": [
-          "הִיא",
-          "לוֹמֶדֶת",
-          "עִבְרִית",
-          "בָּאוּלְפָּן",
           "הוּא",
-          "לוֹמֵד",
-          "בַּבַּיִת",
-          "עִם"
+          "כּוֹתֵב",
+          "מִכְתָּב",
+          "לַחָבֵר",
+          "הִיא",
+          "קוֹרֵאת",
+          "לַחֲבֵרָה",
+          "מְדַבֵּר"
         ]
       }
     ]
