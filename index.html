@@ -423,22 +423,28 @@ function buildQueue(lesson) {
              exercise: ex, licaoId: lesson.id, _p: priority(p, false) });
   }
 
-  return q.sort((a, b) => b._p - a._p);
+  return q.sort((a, b) => b._p - a._p || Math.random() - 0.5);
 }
 
 // ── DISTRACTORS ───────────────────────────────────────────────
 function distractors(vocab, dir, n = 3) {
-  const pool = shuffle(
-    (window.LICOES_MANIFEST || [])
-      .flatMap(l => l.vocab || [])
-      .filter(v => v.id !== vocab.id)
-  );
+  const allVocab = (window.LICOES_MANIFEST || [])
+    .flatMap(l => l.vocab || [])
+    .filter(v => v.id !== vocab.id);
   const field  = dir === 'heb_pt' ? 'pt' : 'heb';
   const seen   = new Set([vocab[field]]);
   const result = [];
-  for (const v of pool) {
+  // Prefer same category first
+  for (const v of shuffle(allVocab.filter(v => v.cat === vocab.cat))) {
     if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
     if (result.length >= n) break;
+  }
+  // Fall back to other categories if needed
+  if (result.length < n) {
+    for (const v of shuffle(allVocab.filter(v => v.cat !== vocab.cat))) {
+      if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
+      if (result.length >= n) break;
+    }
   }
   return result;
 }
