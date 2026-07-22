@@ -676,14 +676,20 @@ const R = {
       if (checked) return;
       checked = true;
       let nCorrect = 0;
+      const wrongLines = [];
       Object.entries(userPairs).forEach(([l, r]) => {
         const ok = Number(l) === Number(r);
         correctness[l] = ok;
-        if (ok) nCorrect++;
+        if (ok) {
+          nCorrect++;
+        } else {
+          const left  = pares[Number(l)][0];
+          const right = pares[Number(l)][1];
+          wrongLines.push(`${left} → ${right}`);
+        }
       });
       render();
-      App.recordAnswer(item, nCorrect === pares.length,
-        pares.map(p => `${p[0]} = ${p[1]}`).join(' · '));
+      App.recordAnswer(item, nCorrect === pares.length, wrongLines.join('\n'));
     };
     actions.appendChild(verifyBtn);
     render();
@@ -816,7 +822,12 @@ const App = {
     fb.className = `feedback show ${ok ? 'correct' : 'wrong'}`;
     $('fb-icon').textContent  = ok ? '✓' : '✗';
     $('fb-title').textContent = ok ? 'Correto!' : 'Incorreto';
-    $('fb-detail').textContent = ok ? '' : `Resposta: ${txt}`;
+    if (ok || !txt) {
+      $('fb-detail').textContent = '';
+    } else {
+      $('fb-detail').innerHTML = txt.split('\n')
+        .map(line => `<div>✗ ${line}</div>`).join('');
+    }
   },
   hideFeedback() { $('feedback').className = 'feedback'; },
 
