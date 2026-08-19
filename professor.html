@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Professor IA">
+  <title>Professor IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #f4f1eb;
+  --card:       #ffffff;
+  --text:       #2c2416;
+  --muted:      #8a7f72;
+  --border:     #ddd5c4;
+  --primary:    #4a6741;
+  --primary-lt: #e8f0e6;
+  --accent:     #7a5c2e;
+  --wrong:      #b83030;
+  --shadow:     0 2px 10px rgba(44,36,22,.10);
+  --r:          14px;
+  --heb:        'Frank Ruhl Libre', 'David Libre', Georgia, serif;
+  --ui:         -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ui);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ── SCREENS ────────────────────────────────────────────────── */
+.screen { display: none; flex-direction: column; min-height: 100dvh; max-width: 580px; margin: 0 auto; }
+.screen.active { display: flex; }
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+  min-height: 60px;
+}
+.header-title   { font-size: 17px; font-weight: 700; flex: 1; }
+.header-sub     { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.btn-icon {
+  width: 40px; height: 40px; border: none;
+  background: var(--primary-lt); color: var(--primary);
+  border-radius: 50%; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: opacity .15s;
+}
+.btn-icon:active { opacity: .65; }
+
+/* ── HOME ───────────────────────────────────────────────────── */
+.home-body { flex: 1; padding: 20px; overflow-y: auto; }
+.home-lead  { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.home-sub   { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+.subjects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.subject-card {
+  background: var(--card); border-radius: var(--r);
+  padding: 16px; border: 1px solid var(--border);
+  box-shadow: var(--shadow); cursor: pointer;
+  display: flex; flex-direction: column; gap: 8px;
+  min-height: 110px; transition: transform .1s;
+}
+.subject-card:active { transform: scale(.97); }
+.s-icon { font-size: 30px; }
+.s-name { font-weight: 600; font-size: 15px; line-height: 1.2; }
+.s-meta { font-size: 12px; color: var(--muted); }
+
+.add-card {
+  border: 2px dashed var(--border) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  align-items: center; justify-content: center;
+  color: var(--muted); gap: 6px !important;
+}
+.add-card .add-icon { font-size: 26px; }
+.add-card .add-label { font-size: 13px; }
+
+/* ── CHAT ───────────────────────────────────────────────────── */
+.chat-messages {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.msg { display: flex; flex-direction: column; max-width: 86%; }
+.msg.user { align-self: flex-end; align-items: flex-end; }
+.msg.prof { align-self: flex-start; align-items: flex-start; }
+.msg.prev { opacity: .45; }
+
+.msg-bubble {
+  padding: 11px 14px; border-radius: 18px;
+  font-size: 15px; line-height: 1.55; word-break: break-word;
+}
+.msg.user .msg-bubble {
+  background: var(--primary); color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg.prof .msg-bubble {
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.msg-img {
+  max-width: 180px; border-radius: 12px;
+  margin-bottom: 6px; display: block;
+}
+
+.session-divider {
+  text-align: center; font-size: 12px; color: var(--muted);
+  padding: 6px 0; border-top: 1px dashed var(--border);
+  margin: 2px 0; align-self: stretch;
+}
+
+/* Hebrew / TTS words */
+.heb-word {
+  font-family: var(--heb);
+  font-size: 1.1em;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--primary-lt);
+  padding: 1px 8px; border-radius: 6px;
+  margin: 0 2px; direction: rtl;
+}
+.play-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; color: var(--primary); padding: 0 1px;
+  line-height: 1; direction: ltr;
+}
+.play-btn:active { opacity: .6; }
+
+/* Markdown inside bubbles */
+.msg-bubble strong { font-weight: 700; }
+.msg-bubble em     { font-style: italic; }
+
+/* ── CHAT INPUT ─────────────────────────────────────────────── */
+.chat-footer {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.img-pending-wrap { position: relative; align-self: flex-start; }
+.img-pending { max-width: 120px; border-radius: 10px; display: block; }
+.img-pending-rm {
+  position: absolute; top: -7px; right: -7px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--wrong); color: #fff; border: none;
+  font-size: 13px; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
+.chat-input {
+  flex: 1; border: 1px solid var(--border); border-radius: 20px;
+  padding: 10px 14px; font-size: 15px; font-family: var(--ui);
+  background: var(--bg); color: var(--text); outline: none;
+  resize: none; min-height: 42px; max-height: 120px; line-height: 1.4;
+}
+.chat-input:focus { border-color: var(--primary); }
+.btn-send {
+  width: 42px; height: 42px; border: none;
+  background: var(--primary); color: #fff;
+  border-radius: 50%; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: opacity .15s;
+}
+.btn-send:disabled { background: var(--border); cursor: not-allowed; }
+.btn-send:active:not(:disabled) { opacity: .75; }
+
+/* Typing indicator */
+.typing { display: flex; gap: 5px; padding: 8px 4px; align-items: center; }
+.typing span {
+  width: 8px; height: 8px; background: var(--muted);
+  border-radius: 50%; animation: bounce 1.2s infinite ease-in-out;
+}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-7px); }
+}
+
+/* ── SETUP ──────────────────────────────────────────────────── */
+.setup-body {
+  flex: 1; padding: 40px 24px 32px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+.setup-icon  { font-size: 60px; text-align: center; }
+.setup-title { font-size: 24px; font-weight: 700; text-align: center; }
+.setup-desc  { color: var(--muted); font-size: 14px; text-align: center; line-height: 1.65; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; margin-bottom: 7px; }
+.text-input {
+  width: 100%; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; font-size: 15px; font-family: var(--ui);
+  background: var(--card); color: var(--text); outline: none;
+}
+.text-input:focus { border-color: var(--primary); }
+.btn-primary {
+  width: 100%; padding: 14px; background: var(--primary); color: #fff;
+  border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: opacity .15s;
+}
+.btn-primary:active { opacity: .82; }
+.setup-link { font-size: 13px; color: var(--primary); text-align: center; cursor: pointer; text-decoration: underline; }
+
+/* ── ADD SUBJECT ────────────────────────────────────────────── */
+.add-body {
+  flex: 1; padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 20px;
+  overflow-y: auto;
+}
+.emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 8px; }
+.emoji-btn {
+  aspect-ratio: 1; border: 2px solid var(--border); border-radius: 10px;
+  background: var(--card); font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .1s, background .1s;
+}
+.emoji-btn.selected { border-color: var(--primary); background: var(--primary-lt); }
+.emoji-btn:active { opacity: .7; }
+
+/* ── PROVIDER TABS ──────────────────────────────────────────── */
+.provider-tab {
+  flex: 1; padding: 10px; border: 2px solid var(--border);
+  border-radius: 10px; background: var(--card); font-size: 14px;
+  font-weight: 600; cursor: pointer; color: var(--muted);
+  transition: all .15s;
+}
+.provider-tab.active {
+  border-color: var(--primary); background: var(--primary-lt);
+  color: var(--primary);
+}
+
+/* ── AUTO SEPARATOR ─────────────────────────────────────────── */
+.fields-separator {
+  display: flex; align-items: center; gap: 10px;
+  margin: 4px 0;
+}
+.fields-separator::before,
+.fields-separator::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.fields-separator-text {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  letter-spacing: .05em; white-space: nowrap;
+}
+
+/* ── COST BADGE ─────────────────────────────────────────────── */
+.cost-badge {
+  font-size: 11px; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 2px 8px; white-space: nowrap;
+}
+
+/* ── ERROR TOAST ────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #333; color: #fff; padding: 10px 18px; border-radius: 20px;
+  font-size: 14px; z-index: 99; opacity: 0; transition: opacity .3s;
+  white-space: nowrap; max-width: 90vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: SETUP (API Key)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-setup" class="screen">
+  <div class="setup-body">
+    <div class="setup-icon">🎓</div>
+    <div class="setup-title">Professor IA</div>
+
+    <!-- Provider toggle -->
+    <div>
+      <div class="field-label">PROVEDOR DE IA</div>
+      <div style="display:flex;gap:8px">
+        <button id="tab-auto"   class="provider-tab" onclick="selectProvider('auto')">
+          Auto
+        </button>
+        <button id="tab-gemini" class="provider-tab" onclick="selectProvider('gemini')">
+          Gemini
+        </button>
+        <button id="tab-claude" class="provider-tab" onclick="selectProvider('claude')">
+          Claude
+        </button>
+      </div>
+      <div id="auto-hint" style="font-size:12px;color:var(--muted);margin-top:6px;display:none">
+        Usa Gemini (gratuito) primeiro. Se falhar, cai automaticamente para Claude.
+      </div>
+    </div>
+
+    <!-- Gemini fields -->
+    <div id="fields-gemini">
+      <div class="field-label">CHAVE API — GEMINI</div>
+      <input id="api-key-input" class="text-input" type="password"
+        placeholder="AIza..." autocomplete="off" spellcheck="false">
+      <div class="field-label" style="margin-top:14px">MODELO GEMINI</div>
+      <input id="model-input" class="text-input" type="text"
+        placeholder="gemini-3.1-flash-lite"
+        autocomplete="off" spellcheck="false">
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">
+        Veja modelos em aistudio.google.com → novo chat → dropdown
+      </div>
+    </div>
+
+    <!-- Auto separator (só visível no modo auto) -->
+    <div id="auto-separator" class="fields-separator" style="display:none">
+      <span class="fields-separator-text">+ FALLBACK CLAUDE (opcional)</span>
+    </div>
+
+    <!-- Claude fields -->
+    <div id="fields-claude" style="display:none">
+      <div class="field-label">CHAVE API — ANTHROPIC</div>
+      <input id="claude-key-input" class="text-input" type="password"
+        placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">
+        Obtenha em console.anthropic.com → API Keys
+      </div>
+      <div class="field-label" style="margin-top:14px">MODELO CLAUDE</div>
+      <input id="claude-model-input" class="text-input" type="text"
+        placeholder="claude-haiku-4-5-20251001"
+        autocomplete="off" spellcheck="false">
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">
+        Haiku = mais barato (~$0.002/sessão) · Sonnet = mais inteligente
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="saveApiKey()">Salvar →</button>
+    <div class="setup-link" onclick="showGeminiHelp()">Como obter as chaves?</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: HOME (Subject Grid)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-home" class="screen">
+  <div class="header">
+    <div style="flex:1">
+      <div class="header-title">Professor IA</div>
+      <div class="header-sub">Escolha o que estudar</div>
+    </div>
+    <button class="btn-icon" onclick="openSetup()" title="Configurações">⚙️</button>
+  </div>
+  <div class="home-body">
+    <div id="subjects-grid" class="subjects-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: PROFESSOR (Chat)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-professor" class="screen">
+  <div class="header">
+    <button class="btn-icon" onclick="exitSession()">←</button>
+    <div style="flex:1">
+      <div id="prof-name" class="header-title"></div>
+      <div id="prof-sub"  class="header-sub"></div>
+    </div>
+    <span id="cost-badge" class="cost-badge" style="display:none"></span>
+    <button class="btn-icon" onclick="triggerCamera()" title="Enviar foto do livro">📷</button>
+  </div>
+  <div id="chat-messages" class="chat-messages"></div>
+  <div class="chat-footer">
+    <div id="img-pending-wrap" style="display:none" class="img-pending-wrap">
+      <img id="img-pending-preview" class="img-pending" src="" alt="">
+      <button class="img-pending-rm" onclick="clearPendingImage()">✕</button>
+    </div>
+    <div class="input-row">
+      <textarea id="chat-input" class="chat-input" rows="1"
+        placeholder="Escreva ou envie uma foto..."
+        onkeydown="onInputKey(event)"
+        oninput="autoResize(this)"></textarea>
+      <button id="btn-send" class="btn-send" onclick="handleSend()">↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: ADD SUBJECT
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-add" class="screen">
+  <div class="header">
+    <button class="btn-icon" onclick="showScreen('home')">←</button>
+    <div class="header-title" style="flex:1">Novo Assunto</div>
+  </div>
+  <div class="add-body">
+    <div>
+      <div class="field-label">NOME DO ASSUNTO</div>
+      <input id="add-name" class="text-input" type="text"
+        placeholder="Ex: Hebraico, Matemática Básica, História...">
+    </div>
+    <div>
+      <div class="field-label">ÍCONE</div>
+      <div id="emoji-grid" class="emoji-grid"></div>
+    </div>
+    <div>
+      <div class="field-label">IDIOMA PARA PRONÚNCIA (opcional)</div>
+      <input id="add-lang" class="text-input" type="text"
+        placeholder="Ex: he-IL, en-US, es-ES  (vazio = sem áudio)">
+    </div>
+    <div>
+      <div class="field-label">NÍVEL / CONTEXTO (opcional)</div>
+      <input id="add-desc" class="text-input" type="text"
+        placeholder="Ex: Iniciante, página 120 do livro...">
+    </div>
+    <button class="btn-primary" onclick="createSubject()">Criar Assunto →</button>
+  </div>
+</div>
+
+<!-- Hidden: file picker (câmera/galeria) -->
+<input type="file" id="file-input" accept="image/*" multiple
+  style="display:none" onchange="onFileSelected(this)">
+
+<!-- Toast for errors -->
+<div id="toast" class="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ─────────────────────────────────────────────────────────────
+//  CONSTANTS
+// ─────────────────────────────────────────────────────────────
+const GEMINI_MODEL_DEFAULT = 'gemini-3.1-flash-lite';
+
+// Rules — fallback embutido usado quando o fetch falha (ex: protocolo file://)
+const PROFESSOR_RULES_FALLBACK = `## Regras Absolutas — Nunca Viole
+
+### Sem Transliteração — REGRA ABSOLUTA
+Nunca escreva sons hebraicos em letras latinas. Em nenhuma circunstância.
+Não como dica, não entre parênteses, não em itálico, não após travessão.
+- PROIBIDO: [שלום] (shalom)
+- PROIBIDO: שלום — shalom
+- PROIBIDO: שלום, que se lê "shalom"
+- CORRETO: [שלום] significa paz
+O aluno usa o botão ▶ para ouvir a pronúncia. Não precisa de ajuda escrita.
+
+### Sem Nikud
+Nunca use pontos vocálicos nas palavras hebraicas.
+- PROIBIDO: טוֹב, שָׁלוֹם, כָּתַב
+- CORRETO: טוב, שלום, כתב
+- Exceção: apenas se o aluno pedir explicitamente sobre a pronúncia de uma vogal específica
+
+### Sem Referência ao Livro Físico
+Nunca peça ao aluno para abrir o livro, olhar uma página, ver uma tabela, procurar algo no material.
+O aluno aprende SOMENTE pelo chat.
+- PROIBIDO: "olhe a página 126", "abra no exercício 5", "procure a palavra na lista"
+- CORRETO: forneça tudo diretamente. Se vai mostrar uma frase, mostre sem mencionar o livro.
+- CORRETO: "Tente ler esta frase: [זה מטבח יפה]"
+
+## Regras de Comportamento
+
+### Seja Direto — Nunca Prometa Sem Entregar
+Nunca diga que vai ensinar algo sem ensinar na mesma resposta.
+- PROIBIDO: "Vamos resolver isso!", "Ótima pergunta, vamos ver...", "Como faremos?"
+- CORRETO: ensine o conteúdo imediatamente na mesma mensagem
+
+### Sempre Oriente o Próximo Passo
+Toda resposta deve terminar com uma instrução clara do que o aluno deve fazer a seguir.
+O aluno nunca deve ficar sem saber o que fazer depois de ler sua resposta.
+
+### Exercícios Auto-Contidos
+Todos os exercícios devem ser possíveis de fazer apenas pelo chat.
+Se quiser que o aluno classifique palavras, forneça as palavras na mensagem.
+
+### Máximo de Itens Novos por Resposta
+Apresente no máximo 3-4 palavras ou conceitos novos por resposta.
+
+### Respeite o Mapa de Conhecimento
+Nunca assuma que o aluno sabe algo marcado como "nao_sabe" ou "nao_testado".
+Se o aluno disser que não sabe uma palavra → pause a aula, ensine, depois retome.
+
+### Perguntas — Nunca Revele a Resposta na Mesma Mensagem
+Quando fizer uma pergunta ao aluno, PARE. Espere a resposta dele.
+Nunca escreva a pergunta e a resposta na mesma mensagem.
+Após o aluno responder, corrija com carinho e explique o que estava certo ou errado.
+
+### O Aluno Não Tem Teclado Hebraico
+O aluno responde em português ou em transliteração aproximada (ex: "ialda iafa").
+Aceite qualquer forma de resposta — transliterada, em português, por descrição.
+
+### Fotos do Livro
+Ao receber uma foto, analise o conteúdo visível e monte uma mini-aula com o material.
+Nunca peça ao aluno para complementar com o livro físico.
+
+### Pausa de Sessão
+Se o aluno disser "pausa", "continuo depois" ou similar:
+Resuma em 2 linhas onde pararam e confirme que o progresso foi salvo.`;
+
+let PROFESSOR_RULES = PROFESSOR_RULES_FALLBACK;
+function geminiUrl() {
+  const model = localStorage.getItem('prof_model') || GEMINI_MODEL_DEFAULT;
+  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=`;
+}
+const MAX_HISTORY   = 12;   // max messages kept in API context
+const MAX_IMG_PX    = 1024; // resize photos to fit this dimension
+const IMG_QUALITY   = 0.82;
+
+const EMOJIS = ['🇮🇱','📚','🔢','🌍','🗺️','🖊️','🔬','🎵','🌱','📐','🏛️','🌐','📖','🎓','🧪','💡'];
+
+// ─────────────────────────────────────────────────────────────
+//  STORAGE
+// ─────────────────────────────────────────────────────────────
+const DB = {
+  getApiKey:      ()      => localStorage.getItem('prof_api_key') || '',
+  setApiKey:      (k)     => localStorage.setItem('prof_api_key', k),
+  getProvider:    ()      => localStorage.getItem('prof_provider') || 'auto',
+  setProvider:    (p)     => localStorage.setItem('prof_provider', p),
+  getClaudeKey:   ()      => localStorage.getItem('prof_claude_key') || '',
+  setClaudeKey:   (k)     => localStorage.setItem('prof_claude_key', k),
+  getClaudeModel: ()      => localStorage.getItem('prof_claude_model') || 'claude-haiku-4-5-20251001',
+  setClaudeModel: (m)     => localStorage.setItem('prof_claude_model', m),
+  getSubjects:    ()      => JSON.parse(localStorage.getItem('prof_subjects') || '[]'),
+  setSubjects:    (arr)   => localStorage.setItem('prof_subjects', JSON.stringify(arr)),
+  getKnowledge:   (id)    => JSON.parse(localStorage.getItem(`prof_${id}_know`) || '{}'),
+  setKnowledge:   (id, k) => localStorage.setItem(`prof_${id}_know`, JSON.stringify(k)),
+  getSession:     (id)    => JSON.parse(localStorage.getItem(`prof_${id}_sess`) || 'null'),
+  setSession:     (id, s) => localStorage.setItem(`prof_${id}_sess`, JSON.stringify(s)),
+  getCostTotal:   ()      => parseFloat(localStorage.getItem('prof_cost_total') || '0'),
+  addCost:        (usd)   => {
+    const t = parseFloat(localStorage.getItem('prof_cost_total') || '0') + usd;
+    localStorage.setItem('prof_cost_total', t.toFixed(6));
+    return t;
+  },
+};
+
+// ─────────────────────────────────────────────────────────────
+//  SCREEN MANAGER
+// ─────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SETUP
+// ─────────────────────────────────────────────────────────────
+let currentProvider = 'auto';
+
+function selectProvider(p) {
+  currentProvider = p;
+  document.getElementById('tab-auto').classList.toggle('active',   p === 'auto');
+  document.getElementById('tab-gemini').classList.toggle('active', p === 'gemini');
+  document.getElementById('tab-claude').classList.toggle('active', p === 'claude');
+
+  const isAuto   = p === 'auto';
+  const isGemini = p === 'gemini' || isAuto;
+  const isClaude = p === 'claude' || isAuto;
+
+  document.getElementById('fields-gemini').style.display    = isGemini ? '' : 'none';
+  document.getElementById('fields-claude').style.display    = isClaude ? '' : 'none';
+  document.getElementById('auto-separator').style.display   = isAuto   ? 'flex' : 'none';
+  document.getElementById('auto-hint').style.display        = isAuto   ? '' : 'none';
+}
+
+function saveApiKey() {
+  DB.setProvider(currentProvider);
+
+  if (currentProvider === 'auto') {
+    const geminiKey = document.getElementById('api-key-input').value.trim();
+    const claudeKey = document.getElementById('claude-key-input').value.trim();
+
+    if (!geminiKey && !claudeKey) {
+      showToast('Informe ao menos uma chave (Gemini ou Claude).');
+      return;
+    }
+
+    if (geminiKey) {
+      if (geminiKey.length < 20) { showToast('Chave Gemini inválida.'); return; }
+      DB.setApiKey(geminiKey);
+      const m = document.getElementById('model-input').value.trim();
+      if (m) localStorage.setItem('prof_model', m);
+    }
+
+    if (claudeKey) {
+      if (claudeKey.length < 20) { showToast('Chave Claude inválida.'); return; }
+      DB.setClaudeKey(claudeKey);
+      const m = document.getElementById('claude-model-input').value.trim();
+      DB.setClaudeModel(m || 'claude-haiku-4-5-20251001');
+    }
+
+  } else if (currentProvider === 'claude') {
+    const k = document.getElementById('claude-key-input').value.trim();
+    if (k.length < 20) { showToast('Chave inválida.'); return; }
+    DB.setClaudeKey(k);
+    const m = document.getElementById('claude-model-input').value.trim();
+    DB.setClaudeModel(m || 'claude-haiku-4-5-20251001');
+
+  } else {
+    // gemini
+    const k = document.getElementById('api-key-input').value.trim();
+    if (k.length < 20) { showToast('Chave inválida.'); return; }
+    DB.setApiKey(k);
+    const m = document.getElementById('model-input').value.trim();
+    if (m) localStorage.setItem('prof_model', m);
+  }
+
+  renderHome();
+  showScreen('home');
+}
+
+function openSetup() {
+  const provider = DB.getProvider();
+  selectProvider(provider);
+  document.getElementById('claude-key-input').value   = DB.getClaudeKey();
+  document.getElementById('claude-model-input').value = DB.getClaudeModel();
+  document.getElementById('api-key-input').value      = DB.getApiKey();
+  document.getElementById('model-input').value        = localStorage.getItem('prof_model') || GEMINI_MODEL_DEFAULT;
+  showScreen('setup');
+}
+
+function showGeminiHelp() {
+  alert(
+    'Como obter a chave gratuita (Gemini):\n\n' +
+    '1. Acesse: aistudio.google.com\n' +
+    '2. Faça login com sua conta Google\n' +
+    '3. Clique em "Get API key"\n' +
+    '4. Clique em "Create API key"\n' +
+    '5. Copie a chave e cole aqui\n\n' +
+    'Como obter a chave Claude (Anthropic):\n\n' +
+    '1. Acesse: console.anthropic.com\n' +
+    '2. Faça login e vá em API Keys\n' +
+    '3. Crie uma chave e cole aqui'
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  HOME — subject grid
+// ─────────────────────────────────────────────────────────────
+function renderHome() {
+  const subjects = DB.getSubjects();
+  const grid = document.getElementById('subjects-grid');
+
+  const cards = subjects.map(s => {
+    const sess  = DB.getSession(s.id);
+    const know  = DB.getKnowledge(s.id);
+    const wc    = Object.keys(know).length;
+    const meta  = sess
+      ? 'Pausado — ' + new Date(sess.updated).toLocaleDateString('pt-BR')
+      : (wc > 0 ? wc + ' palavras' : 'Começar');
+    return `
+      <div class="subject-card" onclick="startSession('${esc(s.id)}')">
+        <div class="s-icon">${s.icon}</div>
+        <div class="s-name">${esc(s.name)}</div>
+        <div class="s-meta">${esc(meta)}</div>
+      </div>`;
+  }).join('');
+
+  grid.innerHTML = cards + `
+    <div class="subject-card add-card" onclick="showAddScreen()">
+      <div class="add-icon">＋</div>
+      <div class="add-label">Novo assunto</div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  ADD SUBJECT
+// ─────────────────────────────────────────────────────────────
+let selectedEmoji = '📚';
+
+function showAddScreen() {
+  selectedEmoji = '📚';
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-lang').value = '';
+  document.getElementById('add-desc').value = '';
+  document.getElementById('emoji-grid').innerHTML = EMOJIS.map(e =>
+    `<button class="emoji-btn ${e === selectedEmoji ? 'selected' : ''}"
+       onclick="pickEmoji('${e}', this)">${e}</button>`
+  ).join('');
+  showScreen('add');
+}
+
+function pickEmoji(e, btn) {
+  selectedEmoji = e;
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function createSubject() {
+  const name = document.getElementById('add-name').value.trim();
+  if (!name) { showToast('Digite o nome do assunto.'); return; }
+  const id   = 'subj_' + Date.now();
+  const lang = document.getElementById('add-lang').value.trim();
+  const desc = document.getElementById('add-desc').value.trim();
+  const subjects = DB.getSubjects();
+  subjects.push({ id, name, icon: selectedEmoji, tts_lang: lang, desc, created: Date.now() });
+  DB.setSubjects(subjects);
+  renderHome();
+  showScreen('home');
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SESSION STATE
+// ─────────────────────────────────────────────────────────────
+let activeSubject = null;
+let apiHistory    = [];    // [{role, parts}] sent to Gemini
+let pendingImgs   = [];    // [{base64, mime, dataUrl}]
+
+function startSession(subjectId) {
+  const subjects = DB.getSubjects();
+  activeSubject  = subjects.find(s => s.id === subjectId);
+  if (!activeSubject) return;
+
+  document.getElementById('prof-name').textContent = activeSubject.icon + ' ' + activeSubject.name;
+  document.getElementById('prof-sub').textContent  = activeSubject.desc || 'Sessão de estudos';
+
+  const messagesEl = document.getElementById('chat-messages');
+  messagesEl.innerHTML = '';
+  apiHistory = [];
+  clearPendingImage();
+  setSendEnabled(true);
+  showScreen('professor');
+
+  const saved = DB.getSession(subjectId);
+
+  if (saved && saved.history && saved.history.length >= 2) {
+    // Restore previous session — show last 4 messages grayed
+    apiHistory = saved.history;
+    messagesEl.innerHTML = '<div class="session-divider">— Sessão anterior —</div>';
+    const preview = apiHistory.slice(-4);
+    preview.forEach(m => {
+      const txt = (m.parts || []).filter(p => p.text).map(p => p.text).join('');
+      if (txt) appendBubble(m.role === 'user' ? 'user' : 'prof', txt, null, true);
+    });
+    // Show resume prompt without calling API — waits for user to write first
+    const resumeEl = document.createElement('div');
+    resumeEl.className = 'session-divider';
+    resumeEl.innerHTML = '— Sessão pausada. Escreva qualquer coisa para continuar —';
+    messagesEl.appendChild(resumeEl);
+    // Prepend resume context to next user message via a flag
+    window._pendingResume = true;
+  } else {
+    // First time — professor opens the class
+    callGemini([{ role: 'user', parts: [{ text: 'Olá professor! Estou pronto para começar.' }] }]);
+  }
+}
+
+function exitSession() {
+  if (activeSubject && apiHistory.length > 0) {
+    DB.setSession(activeSubject.id, {
+      history: apiHistory.slice(-MAX_HISTORY),
+      updated: Date.now(),
+    });
+  }
+  activeSubject = null;
+  apiHistory    = [];
+  clearPendingImage();
+  renderHome();
+  showScreen('home');
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SYSTEM PROMPT
+// ─────────────────────────────────────────────────────────────
+function buildSystemPrompt() {
+  const s       = activeSubject;
+  const know    = DB.getKnowledge(s.id);
+  const entries = Object.entries(know);
+  const hasTTS  = !!s.tts_lang;
+
+  const knowText = entries.length > 0
+    ? entries.map(([w, v]) => `  ${w}: ${v}`).join('\n')
+    : '  (ainda vazio — primeira sessão)';
+
+  const isHebrew = s.id === 'hebraico_default' ||
+    (s.tts_lang || '').startsWith('he') ||
+    s.name.toLowerCase().includes('hebra');
+
+  return `Você é um professor particular experiente, paciente e encorajador.
+
+ASSUNTO: ${s.name}${s.desc ? `\nNÍVEL / CONTEXTO: ${s.desc}` : ''}${isHebrew ? `
+LIVRO DO ALUNO: "עברית מן ההתחלה" (Hebraico do Começo), Parte 1 — Shlomit Chayat, Sara Israeli, Hila Kobliner.
+O aluno está por volta da página 120, nível iniciante, lê sem nikud.` : ''}
+
+MAPA DE CONHECIMENTO DO ALUNO:
+${knowText}
+(sabe = confirmado | nao_sabe = declarou não saber | fragil = errou recentemente | nao_testado = ainda não foi testado)
+
+─────────────────────────────────────────
+REGRAS DE COMPORTAMENTO (arquivo: professor-rules.md):
+─────────────────────────────────────────
+${PROFESSOR_RULES}
+
+─────────────────────────────────────────
+INSTRUÇÕES TÉCNICAS DO APP:
+─────────────────────────────────────────
+- Ensine SEMPRE em Português (Brasil)
+- ${hasTTS
+    ? `Para palavras em ${s.name} que o aluno deve OUVIR, coloque entre colchetes: [שלום]
+  O app gera botão ▶ automaticamente. Use para vocabulário novo e frases-exemplo.`
+    : `Destaque termos importantes em **negrito**.`}
+- AO FINAL de cada resposta, se houver palavras para atualizar no mapa de conhecimento,
+  adicione EXATAMENTE esta linha (será processada e ocultada do aluno):
+  ::K::{"palavra": "sabe|nao_sabe|fragil"}
+  Exemplo: ::K::{"שלום": "sabe", "משפחה": "fragil", "כתב": "nao_sabe"}`;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SHARED RESPONSE HANDLER
+// ─────────────────────────────────────────────────────────────
+function handleAIResponse(raw, trimmed) {
+  const { clean, updates } = parseKnowledgeBlock(raw);
+
+  if (Object.keys(updates).length > 0) {
+    const know = DB.getKnowledge(activeSubject.id);
+    Object.assign(know, updates);
+    DB.setKnowledge(activeSubject.id, know);
+  }
+
+  apiHistory = [...trimmed, { role: 'model', parts: [{ text: raw }] }];
+  DB.setSession(activeSubject.id, { history: apiHistory.slice(-MAX_HISTORY), updated: Date.now() });
+
+  appendBubble('prof', clean);
+}
+
+// ─────────────────────────────────────────────────────────────
+//  GEMINI FETCH (pure — throws on error)
+// ─────────────────────────────────────────────────────────────
+async function fetchGemini(messages) {
+  const apiKey = DB.getApiKey();
+  if (!apiKey) throw new Error('Chave Gemini não configurada.');
+
+  const trimmed = messages.slice(-MAX_HISTORY);
+
+  let resp;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) {
+      const waitSec = attempt === 1 ? 5 : 15;
+      for (let s = waitSec; s > 0; s--) {
+        showToast(`Aguardando ${s}s antes de tentar novamente...`);
+        await new Promise(r => setTimeout(r, 1000));
+      }
+    }
+    resp = await fetch(geminiUrl() + apiKey, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: buildSystemPrompt() }] },
+        contents: trimmed,
+        generationConfig: { temperature: 0.75, maxOutputTokens: 2048 },
+      }),
+    });
+    if (resp.status !== 503 && resp.status !== 429) break;
+    if (attempt === 2) break;
+  }
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    const msg = err.error?.message || '';
+    if (resp.status === 429) {
+      const match = msg.match(/retry in ([\d.]+)s/i);
+      const secs  = match ? Math.ceil(parseFloat(match[1])) : 60;
+      throw new Error(`Limite de uso atingido. Aguarde ${secs} segundos e tente novamente.\n(Plano gratuito: 20 requisições/minuto)`);
+    }
+    throw new Error(msg || `Erro HTTP ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!raw) throw new Error('Resposta vazia da API Gemini.');
+
+  return { raw, trimmed };
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CLAUDE FETCH (pure — throws on error)
+// ─────────────────────────────────────────────────────────────
+async function fetchClaude(messages) {
+  const apiKey = DB.getClaudeKey();
+  if (!apiKey) throw new Error('Chave Claude não configurada.');
+
+  const trimmed = messages.slice(-MAX_HISTORY);
+
+  // Convert Gemini format → Claude format
+  const claudeMsgs = trimmed.map(m => {
+    const role = m.role === 'model' ? 'assistant' : 'user';
+    const parts = m.parts || [];
+    if (parts.length === 1 && parts[0].text) {
+      return { role, content: parts[0].text };
+    }
+    const content = parts.map(p => {
+      if (p.text) return { type: 'text', text: p.text };
+      if (p.inline_data) return {
+        type: 'image',
+        source: { type: 'base64', media_type: p.inline_data.mime_type, data: p.inline_data.data }
+      };
+      return null;
+    }).filter(Boolean);
+    return { role, content };
+  });
+
+  // Claude requires alternating user/assistant — merge consecutive same-role messages
+  const merged = [];
+  for (const msg of claudeMsgs) {
+    const last = merged[merged.length - 1];
+    if (last && last.role === msg.role) {
+      const lastContent = Array.isArray(last.content) ? last.content : [{ type: 'text', text: last.content }];
+      const newContent  = Array.isArray(msg.content)  ? msg.content  : [{ type: 'text', text: msg.content }];
+      last.content = [...lastContent, ...newContent];
+    } else {
+      merged.push({ ...msg });
+    }
+  }
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model:      DB.getClaudeModel(),
+      max_tokens: 2048,
+      system:     buildSystemPrompt(),
+      messages:   merged,
+    }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || `Erro HTTP ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  const raw  = data.content?.[0]?.text || '';
+  if (!raw) throw new Error('Resposta vazia da API Claude.');
+
+  // Cost tracking (Haiku: $0.25/M input, $1.25/M output)
+  const usage     = data.usage || {};
+  const costUSD   = ((usage.input_tokens || 0) * 0.25 + (usage.output_tokens || 0) * 1.25) / 1_000_000;
+  const totalCost = DB.addCost(costUSD);
+  updateCostBadge(costUSD, totalCost);
+
+  return { raw, trimmed };
+}
+
+// ─────────────────────────────────────────────────────────────
+//  AI DISPATCHER (main entry point — called from everywhere)
+// ─────────────────────────────────────────────────────────────
+async function callGemini(messages) {
+  const provider = DB.getProvider();
+  setSendEnabled(false);
+  showTyping(true);
+
+  try {
+    if (provider === 'gemini') {
+      const { raw, trimmed } = await fetchGemini(messages);
+      handleAIResponse(raw, trimmed);
+
+    } else if (provider === 'claude') {
+      const { raw, trimmed } = await fetchClaude(messages);
+      handleAIResponse(raw, trimmed);
+
+    } else {
+      // auto: try Gemini first, fall back to Claude
+      try {
+        const { raw, trimmed } = await fetchGemini(messages);
+        handleAIResponse(raw, trimmed);
+      } catch (geminiErr) {
+        showToast('Gemini indisponível — usando Claude...');
+        const { raw, trimmed } = await fetchClaude(messages);
+        handleAIResponse(raw, trimmed);
+      }
+    }
+
+  } catch (e) {
+    appendBubble('prof', '⚠️ ' + e.message);
+  } finally {
+    showTyping(false);
+    setSendEnabled(true);
+  }
+}
+
+function updateCostBadge(sessionDelta, total) {
+  const badge = document.getElementById('cost-badge');
+  if (!badge) return;
+  badge.style.display = '';
+  badge.textContent = `💰 $${total.toFixed(4)}`;
+  badge.title = `Última mensagem: $${sessionDelta.toFixed(5)}`;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SEND MESSAGE
+// ─────────────────────────────────────────────────────────────
+function handleSend() {
+  const input = document.getElementById('chat-input');
+  const text  = input.value.trim();
+  if (!text && pendingImgs.length === 0) return;
+
+  // If resuming a saved session, prepend context to first message
+  let fullText = text;
+  if (window._pendingResume) {
+    window._pendingResume = false;
+    fullText = (text
+      ? text
+      : 'Estou de volta, pode continuar de onde paramos.');
+  }
+
+  const parts = [];
+  if (fullText) parts.push({ text: fullText });
+  pendingImgs.forEach(img => parts.push({ inline_data: { mime_type: img.mime, data: img.base64 } }));
+
+  appendBubble('user', text || '(retomando sessão)', pendingImgs);
+
+  input.value = '';
+  autoResize(input);
+  clearPendingImage();
+
+  const userMsg     = { role: 'user', parts };
+  const newMessages = [...apiHistory, userMsg];
+
+  callGemini(newMessages);
+}
+
+function onInputKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+}
+
+// ─────────────────────────────────────────────────────────────
+//  RENDER MESSAGES
+// ─────────────────────────────────────────────────────────────
+function appendBubble(role, text, imgData, isPrev) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role + (isPrev ? ' prev' : '');
+
+  let html = '';
+
+  // Image thumbnails (user messages with photos)
+  if (imgData && imgData.length > 0 && role === 'user') {
+    imgData.forEach((img, i) => {
+      html += `<img class="msg-img" src="${img.dataUrl}" alt="foto ${i+1}">`;
+    });
+  }
+
+  // Text bubble
+  if (text) {
+    const content = (role === 'prof') ? renderProfText(text) : escLines(text);
+    html += `<div class="msg-bubble">${content}</div>`;
+  }
+
+  div.innerHTML = html;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function enforceHebrewRules(text) {
+  // 1. Strip nikud (Hebrew vowel points U+05B0–U+05C7)
+  text = text.replace(/[\u05B0-\u05C7]/g, '');
+
+  // 2. Strip transliteration in parentheses immediately after Hebrew or ]
+  // e.g. [שלום] (shalom) → [שלום]   |   ספר (sefer) → ספר
+  text = text.replace(/([\u05D0-\u05EA\]]+)\s*\(([^)\u0080-\uFFFF]{1,60})\)/g, '$1');
+
+  // 3. Strip any remaining (ASCII-only text) — catches leftover transliterations
+  // e.g. " (Ani koneh sefer)" → ""    but keeps "(área)" because á > U+007F
+  text = text.replace(/\s\(([^\u0080-\uFFFF)]{2,60})\)/g, '');
+
+  // 4. Strip book/page references
+  text = text.replace(/\b(abra|olhe|veja|procure|encontre)\s+(n[ao]s?\s+)?(p[áa]gina|livro|exerc[íi]cio|tabela)[^.!?\n]*/gi, '');
+
+  return text;
+}
+
+function renderProfText(raw) {
+  // 0. Strip ::K:: block (safety — in case it wasn't stripped before display)
+  const kIdx = raw.lastIndexOf('::K::');
+  if (kIdx !== -1) raw = raw.slice(0, kIdx).trim();
+
+  // 1. Extract [word] patterns BEFORE stripping nikud, so TTS gets original
+  const lang = activeSubject?.tts_lang || '';
+  const ttsTokens = [];
+  raw = raw.replace(/\[([^\]\n]+)\]/g, (_, word) => {
+    const idx = ttsTokens.length;
+    // displayWord: nikud stripped (student sees clean text)
+    // ttsWord: original with nikud (TTS pronounces correctly)
+    const displayWord = word.replace(/[\u05B0-\u05C7]/g, '');
+    ttsTokens.push({ ttsWord: word, displayWord });
+    return `\x01TTS${idx}\x01`;
+  });
+
+  // 2. Enforce Hebrew rules on the rest (nikud + transliteration + book refs)
+  raw = enforceHebrewRules(raw);
+
+  // 3. Escape HTML
+  let t = esc(raw);
+
+  // 4. Restore TTS tokens as spans with ▶ button
+  t = t.replace(/\x01TTS(\d+)\x01/g, (_, i) => {
+    const { ttsWord, displayWord } = ttsTokens[parseInt(i)];
+    if (!lang) return `<span class="heb-word">${esc(displayWord)}</span>`;
+    const wEsc = escAttr(ttsWord);     // original with nikud → correct TTS
+    const lEsc = escAttr(lang);
+    return `<span class="heb-word">${esc(displayWord)}&nbsp;<button class="play-btn" onclick="speak('${wEsc}','${lEsc}')" title="Ouvir">▶</button></span>`;
+  });
+
+  // 5. **bold**
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // 6. *italic*
+  t = t.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+  // 7. Newlines
+  t = t.replace(/\n/g, '<br>');
+
+  return t;
+}
+
+function parseKnowledgeBlock(raw) {
+  const marker = '::K::';
+  const idx    = raw.lastIndexOf(marker);
+  if (idx === -1) return { clean: raw.trim(), updates: {} };
+
+  const jsonStr = raw.slice(idx + marker.length).trim();
+  const clean   = raw.slice(0, idx).trim();
+
+  try   { return { clean, updates: JSON.parse(jsonStr) }; }
+  catch { return { clean: raw.trim(), updates: {} }; }
+}
+
+// ─────────────────────────────────────────────────────────────
+//  TTS — Text to Speech
+// ─────────────────────────────────────────────────────────────
+function speak(text, lang) {
+  if (!window.speechSynthesis) { showToast('Seu navegador não suporta áudio.'); return; }
+
+  const doSpeak = () => {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang  = lang;
+    u.rate  = 0.78;
+    u.pitch = 1;
+
+    // Tenta encontrar uma voz exata para o idioma, depois qualquer voz do idioma
+    const voices  = speechSynthesis.getVoices();
+    const exact   = voices.find(v => v.lang === lang);
+    const partial = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+    const chosen  = exact || partial || null;
+    if (chosen) u.voice = chosen;
+    else if (!exact && !partial) {
+      showToast(`Voz ${lang} não encontrada. Instale o pacote de idioma no sistema.`);
+    }
+
+    u.onerror = () => showToast('Erro ao reproduzir áudio.');
+    speechSynthesis.speak(u);
+  };
+
+  // Chrome carrega vozes de forma assíncrona — aguarda se necessário
+  const voices = speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    doSpeak();
+  } else {
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.onvoiceschanged = null;
+      doSpeak();
+    };
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CAMERA / IMAGE
+// ─────────────────────────────────────────────────────────────
+function triggerCamera() {
+  document.getElementById('file-input').click();
+}
+
+function onFileSelected(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => resizeImage(e.target.result, file.type, (base64, mime, dataUrl) => {
+      pendingImgs.push({ base64, mime, dataUrl });
+      renderPendingPreviews();
+    });
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function resizeImage(dataUrl, mimeType, callback) {
+  const mime = mimeType || 'image/jpeg';
+  const img  = new Image();
+  img.onload = () => {
+    let { width: w, height: h } = img;
+    if (w > MAX_IMG_PX || h > MAX_IMG_PX) {
+      const ratio = Math.min(MAX_IMG_PX / w, MAX_IMG_PX / h);
+      w = Math.round(w * ratio);
+      h = Math.round(h * ratio);
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width  = w;
+    canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    const outUrl   = canvas.toDataURL('image/jpeg', IMG_QUALITY);
+    const base64   = outUrl.split(',')[1];
+    callback(base64, 'image/jpeg', outUrl);
+  };
+  img.src = dataUrl;
+}
+
+function renderPendingPreviews() {
+  const wrap = document.getElementById('img-pending-wrap');
+  wrap.style.display = 'flex';
+  wrap.style.flexWrap = 'wrap';
+  wrap.style.gap = '8px';
+  wrap.innerHTML = pendingImgs.map((img, i) => `
+    <div style="position:relative">
+      <img class="img-pending" src="${img.dataUrl}" alt="foto ${i+1}">
+      <button class="img-pending-rm" onclick="removePendingImg(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removePendingImg(idx) {
+  pendingImgs.splice(idx, 1);
+  if (pendingImgs.length === 0) clearPendingImage();
+  else renderPendingPreviews();
+}
+
+function clearPendingImage() {
+  pendingImgs = [];
+  document.getElementById('img-pending-wrap').style.display = 'none';
+  document.getElementById('img-pending-wrap').innerHTML = '';
+}
+
+// ─────────────────────────────────────────────────────────────
+//  UI HELPERS
+// ─────────────────────────────────────────────────────────────
+let typingEl = null;
+
+function showTyping(on) {
+  const container = document.getElementById('chat-messages');
+  if (on) {
+    typingEl = document.createElement('div');
+    typingEl.className = 'msg prof';
+    typingEl.innerHTML = '<div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+    container.appendChild(typingEl);
+    container.scrollTop = container.scrollHeight;
+  } else if (typingEl) {
+    typingEl.remove();
+    typingEl = null;
+  }
+}
+
+function setSendEnabled(on) {
+  document.getElementById('btn-send').disabled = !on;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// HTML escaping
+function esc(s)     { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escLines(s){ return esc(s).replace(/\n/g,'<br>'); }
+
+// ─────────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────────
+async function loadRules() {
+  try {
+    const resp = await fetch('./professor-rules.md?v=' + Date.now());
+    if (resp.ok) PROFESSOR_RULES = await resp.text();
+  } catch (e) {
+    console.warn('professor-rules.md não encontrado, usando regras embutidas.');
+  }
+}
+
+async function init() {
+  await loadRules();
+
+  // Seed Hebrew subject on first launch
+  if (DB.getSubjects().length === 0) {
+    DB.setSubjects([{
+      id:       'hebraico_default',
+      name:     'Hebraico',
+      icon:     '🇮🇱',
+      tts_lang: 'he-IL',
+      desc:     'Ivrit min ha-hatchalá, Parte 1 — Iniciante, pág. ~120',
+      created:  Date.now(),
+    }]);
+  }
+
+  const hasKey = DB.getClaudeKey() || DB.getApiKey();
+  if (!hasKey) {
+    selectProvider(DB.getProvider());
+    showScreen('setup');
+  } else {
+    renderHome();
+    showScreen('home');
+  }
+}
+
+init();
+</script>
+</body>
+</html>
