@@ -865,6 +865,18 @@ function buildQueue(lesson, mode) {
 }
 
 // ── DISTRACTORS ───────────────────────────────────────────────
+// Extract grammatical form from pt field: "masc. sing.", "fem. pl.", etc.
+function gramForm(pt) {
+  const m = pt.match(/\((.*?)\)\s*$/);
+  if (!m) return '';
+  const tag = m[1].toLowerCase();
+  const fem = /fem/.test(tag);
+  const masc = /masc/.test(tag);
+  const pl = /pl/.test(tag);
+  const sing = /sing/.test(tag) || (!pl && (fem || masc));
+  return (fem ? 'f' : masc ? 'm' : '') + (pl ? 'p' : sing ? 's' : '');
+}
+
 function distractors(vocab, dir, n = 3) {
   const allVocab = (window.LICOES_MANIFEST || [])
     .flatMap(l => l.vocab || [])
@@ -872,15 +884,22 @@ function distractors(vocab, dir, n = 3) {
   const field  = dir === 'heb_pt' ? 'pt' : 'heb';
   const seen   = new Set([vocab[field]]);
   const result = [];
-  for (const v of shuffle(allVocab.filter(v => v.cat === vocab.cat))) {
-    if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
-    if (result.length >= n) break;
-  }
-  if (result.length < n) {
-    for (const v of shuffle(allVocab.filter(v => v.cat !== vocab.cat))) {
+  const form   = gramForm(vocab.pt);
+
+  // Priority tiers: 1) same cat + same form, 2) same form, 3) same cat, 4) anything
+  const tiers = [
+    v => v.cat === vocab.cat && gramForm(v.pt) === form && form !== '',
+    v => gramForm(v.pt) === form && form !== '',
+    v => v.cat === vocab.cat,
+    () => true,
+  ];
+
+  for (const filter of tiers) {
+    for (const v of shuffle(allVocab.filter(filter))) {
       if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
       if (result.length >= n) break;
     }
+    if (result.length >= n) break;
   }
   return result;
 }
