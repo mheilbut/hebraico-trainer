@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Professor IA">
-  <title>Professor IA</title>
+  <meta name="apple-mobile-web-app-title" content="Hebraico">
+  <title>Hebraico</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <script src="licoes/manifest.js"></script>
   <style>
 /* ── RESET ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,7 +23,10 @@
   --primary:    #4a6741;
   --primary-lt: #e8f0e6;
   --accent:     #7a5c2e;
+  --correct:    #3d7a3d;
+  --correct-lt: #e6f4e6;
   --wrong:      #b83030;
+  --wrong-lt:   #fce8e8;
   --shadow:     0 2px 10px rgba(44,36,22,.10);
   --r:          14px;
   --heb:        'Frank Ruhl Libre', 'David Libre', Georgia, serif;
@@ -64,11 +68,28 @@ html, body {
 }
 .btn-icon:active { opacity: .65; }
 
-/* ── HOME ───────────────────────────────────────────────────── */
+/* ── MAIN HOME ──────────────────────────────────────────────── */
 .home-body { flex: 1; padding: 20px; overflow-y: auto; }
 .home-lead  { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
 .home-sub   { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
 
+/* Mode cards (3 big cards on home) */
+.mode-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 28px; }
+.mode-card {
+  background: var(--card); border-radius: var(--r);
+  padding: 20px 18px; border: 1px solid var(--border);
+  box-shadow: var(--shadow); cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: transform .1s;
+}
+.mode-card:active { transform: scale(.97); }
+.mode-icon { font-size: 34px; flex-shrink: 0; }
+.mode-info { flex: 1; }
+.mode-name { font-weight: 700; font-size: 16px; line-height: 1.2; }
+.mode-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.mode-arrow { font-size: 18px; color: var(--muted); flex-shrink: 0; }
+
+/* ── SUBJECTS GRID (professor) ──────────────────────────────── */
 .subjects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .subject-card {
@@ -92,6 +113,194 @@ html, body {
 }
 .add-card .add-icon { font-size: 26px; }
 .add-card .add-label { font-size: 13px; }
+
+/* ── LESSON LIST (flashcards/quizzes picker) ────────────────── */
+.lesson-list-body { flex: 1; padding: 16px; overflow-y: auto; }
+
+.section-hdr {
+  display: flex; align-items: center; gap: 8px;
+  margin: 20px 0 10px; padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border);
+}
+.section-hdr:first-child { margin-top: 0; }
+.section-hdr .sh-icon { font-size: 1rem; }
+.section-hdr .sh-title {
+  font-size: .78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em;
+}
+.section-hdr.anterior .sh-title { color: #7a5020; }
+.section-hdr.atual    .sh-title { color: var(--primary); }
+.section-hdr.revisao  .sh-title { color: var(--muted); }
+
+.lesson-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  box-shadow: var(--shadow); cursor: pointer;
+  margin-bottom: 12px; transition: transform .12s;
+}
+.lesson-card:active { transform: scale(.98); }
+.lesson-card.anterior { border-left: 3px solid #c8841a; }
+.lesson-card.atual    { border-left: 3px solid var(--primary); }
+
+.lc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.lc-title { font-size: 1rem; font-weight: 600; }
+.lc-meta  { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.lc-badge {
+  font-size: .72rem; background: var(--primary-lt); color: var(--primary);
+  padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 8px;
+}
+.lc-badge.done { background: #d4edda; color: #256030; }
+.lc-badge.anterior { background: #fef3e2; color: #7a5020; }
+.lc-badge.atual { background: var(--primary-lt); color: var(--primary); }
+
+.pbar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.pbar-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width .4s; }
+.pbar-label { font-size: .75rem; color: var(--muted); margin-top: 5px; }
+
+/* ── EXERCISE SCREEN ────────────────────────────────────────── */
+.ex-screen-body { flex: 1; padding: 0 16px 32px; display: flex; flex-direction: column; }
+.ex-strip { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.ex-strip .pbar { flex: 1; height: 8px; }
+.ex-count { font-size: .82rem; color: var(--muted); white-space: nowrap; }
+
+.ex-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 22px 18px 18px;
+  box-shadow: var(--shadow); margin-bottom: 14px;
+  flex: 1; display: flex; flex-direction: column;
+}
+
+.ex-type-badge {
+  font-size: .68rem; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--muted); margin-bottom: 10px;
+}
+.ex-question { font-size: 1rem; color: var(--muted); margin-bottom: 14px; }
+
+/* Hebrew typography */
+.heb-xl  { font-family: var(--heb); font-size: 2.8rem; direction: rtl; text-align: center; line-height: 1.25; margin: 10px 0; }
+.heb-lg  { font-family: var(--heb); font-size: 1.9rem; direction: rtl; text-align: center; line-height: 1.3; }
+.heb-md  { font-family: var(--heb); font-size: 1.4rem; direction: rtl; }
+.translit { text-align: center; font-size: .88rem; color: var(--muted); font-style: italic; margin-bottom: 6px; }
+
+/* Multiple choice */
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.opt {
+  min-height: 52px; padding: 10px 8px;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+  cursor: pointer; font-family: var(--ui); font-size: .95rem; color: var(--text);
+  line-height: 1.3; text-align: center;
+  transition: border-color .12s, background .12s;
+  display: flex; align-items: center; justify-content: center;
+}
+.opt.heb { font-family: var(--heb); font-size: 1.5rem; direction: rtl; }
+.opt:active { transform: scale(.97); }
+.opt.correct   { background: var(--correct-lt); border-color: var(--correct); color: var(--correct); }
+.opt.wrong     { background: var(--wrong-lt);   border-color: var(--wrong);   color: var(--wrong);   }
+.opt.show-ans  { background: var(--correct-lt); border-color: var(--correct); }
+.opt.disabled  { pointer-events: none; opacity: .5; }
+
+/* Montar frase */
+.sentence-area {
+  min-height: 60px; background: var(--bg);
+  border: 2px dashed var(--border); border-radius: 10px;
+  padding: 10px 12px; display: flex; flex-wrap: wrap;
+  gap: 6px; align-items: center; direction: rtl;
+  margin-bottom: 12px; cursor: default;
+}
+.sentence-area.valid   { border-color: var(--correct); background: var(--correct-lt); }
+.sentence-area.invalid { border-color: var(--wrong);   background: var(--wrong-lt); }
+.sa-placeholder { color: var(--muted); font-size: .85rem; font-style: italic; }
+
+.word-bank { display: flex; flex-wrap: wrap; gap: 8px; direction: rtl; margin-bottom: 12px; }
+
+.tile {
+  padding: 8px 12px; background: var(--card);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: var(--heb); font-size: 1.25rem;
+  cursor: pointer; transition: all .1s; min-height: 44px;
+  display: flex; align-items: center;
+}
+.tile:active { transform: scale(.94); }
+.tile.placed {
+  background: var(--primary-lt); border-color: var(--primary);
+  font-size: 1.1rem; cursor: pointer;
+}
+.tile.used { opacity: .2; pointer-events: none; }
+
+/* Lacuna */
+.lacuna-tmpl {
+  font-family: var(--heb); font-size: 1.65rem;
+  direction: rtl; text-align: center; line-height: 1.7;
+  margin: 10px 0 18px;
+}
+.blank-line {
+  display: inline-block; min-width: 70px; height: 2px;
+  background: var(--text); vertical-align: middle;
+  margin: 0 4px; position: relative; top: -7px;
+}
+.blank-filled {
+  display: inline-block; padding: 1px 10px;
+  border-radius: 5px; font-weight: 600;
+}
+.blank-filled.correct { background: var(--correct-lt); color: var(--correct); }
+.blank-filled.wrong   { background: var(--wrong-lt);   color: var(--wrong); }
+
+/* Parear */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.match-col  { display: flex; flex-direction: column; gap: 8px; }
+
+.match-item {
+  min-height: 50px; padding: 10px 8px;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+  cursor: pointer; text-align: center; font-size: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s; line-height: 1.2;
+}
+.match-item.heb { font-family: var(--heb); font-size: 1.4rem; direction: rtl; }
+.match-item:active { transform: scale(.97); }
+.match-item.selected  { border-color: var(--primary); background: var(--primary-lt); }
+.match-item.paired    { border-color: var(--correct); background: var(--correct-lt); pointer-events: none; }
+.match-item.wrong-pair{ border-color: var(--wrong);   background: var(--wrong-lt); }
+
+/* Feedback bar */
+.feedback {
+  padding: 13px 16px; border-radius: var(--r); margin-bottom: 12px;
+  display: none; align-items: flex-start; gap: 12px;
+}
+.feedback.show { display: flex; }
+.feedback.correct { background: var(--correct-lt); border: 1.5px solid var(--correct); }
+.feedback.wrong   { background: var(--wrong-lt);   border: 1.5px solid var(--wrong); }
+.fb-icon  { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.fb-body  { flex: 1; }
+.fb-title { font-weight: 700; font-size: .95rem; }
+.fb-detail{ font-size: .84rem; color: var(--muted); margin-top: 3px; }
+
+/* Buttons */
+.btn {
+  width: 100%; min-height: 52px; padding: 12px 20px;
+  border: none; border-radius: var(--r); font-family: var(--ui);
+  font-size: 1rem; font-weight: 600; cursor: pointer;
+  transition: all .12s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary  { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #3a5333; }
+.btn-check    { background: #e4dfd5; color: #3a3020; }
+.btn-off      { opacity: .4; pointer-events: none; }
+
+.action-area { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 14px; }
+
+/* Results */
+.results-hero { text-align: center; padding: 28px 16px; }
+.results-icon  { font-size: 3.5rem; display: block; margin-bottom: 10px; }
+.results-title { font-size: 1.45rem; font-weight: 700; margin-bottom: 4px; }
+.results-sub   { color: var(--muted); }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 16px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+.stat-n    { font-size: 1.85rem; font-weight: 700; color: var(--primary); }
+.stat-lbl  { font-size: .75rem; color: var(--muted); margin-top: 2px; }
 
 /* ── CHAT ───────────────────────────────────────────────────── */
 .chat-messages {
@@ -211,12 +420,12 @@ html, body {
   background: var(--card); color: var(--text); outline: none;
 }
 .text-input:focus { border-color: var(--primary); }
-.btn-primary {
+.btn-setup-primary {
   width: 100%; padding: 14px; background: var(--primary); color: #fff;
   border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
   cursor: pointer; transition: opacity .15s;
 }
-.btn-primary:active { opacity: .82; }
+.btn-setup-primary:active { opacity: .82; }
 .setup-link { font-size: 13px; color: var(--primary); text-align: center; cursor: pointer; text-decoration: underline; }
 
 /* ── ADD SUBJECT ────────────────────────────────────────────── */
@@ -276,6 +485,13 @@ html, body {
   white-space: nowrap; max-width: 90vw; text-align: center;
 }
 .toast.show { opacity: 1; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .heb-xl { font-size: 2.2rem; }
+  .opts   { grid-template-columns: 1fr; }
+  .match-grid { gap: 7px; }
+}
   </style>
 </head>
 <body>
@@ -286,7 +502,7 @@ html, body {
 <div id="screen-setup" class="screen">
   <div class="setup-body">
     <div class="setup-icon">🎓</div>
-    <div class="setup-title">Professor IA</div>
+    <div class="setup-title">Hebraico</div>
 
     <!-- Provider toggle -->
     <div>
@@ -317,7 +533,7 @@ html, body {
         placeholder="gemini-3.1-flash-lite"
         autocomplete="off" spellcheck="false">
       <div style="font-size:12px;color:var(--muted);margin-top:5px">
-        Veja modelos em aistudio.google.com → novo chat → dropdown
+        Veja modelos em aistudio.google.com
       </div>
     </div>
 
@@ -343,21 +559,62 @@ html, body {
       </div>
     </div>
 
-    <button class="btn-primary" onclick="saveApiKey()">Salvar →</button>
+    <button class="btn-setup-primary" onclick="saveApiKey()">Salvar →</button>
     <div class="setup-link" onclick="showGeminiHelp()">Como obter as chaves?</div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     SCREEN: HOME (Subject Grid)
+     SCREEN: HOME (3 mode cards)
 ══════════════════════════════════════════════════════════════ -->
 <div id="screen-home" class="screen">
   <div class="header">
     <div style="flex:1">
-      <div class="header-title">Professor IA</div>
-      <div class="header-sub">Escolha o que estudar</div>
+      <div class="header-title">Hebraico</div>
+      <div class="header-sub">Escolha como estudar</div>
     </div>
     <button class="btn-icon" onclick="openSetup()" title="Configurações">⚙️</button>
+  </div>
+  <div class="home-body">
+    <div class="mode-grid">
+      <div class="mode-card" onclick="showProfessorHome()">
+        <div class="mode-icon">🎓</div>
+        <div class="mode-info">
+          <div class="mode-name">Professor IA</div>
+          <div class="mode-desc">Aula interativa com IA — mande fotos do livro</div>
+        </div>
+        <div class="mode-arrow">→</div>
+      </div>
+      <div class="mode-card" onclick="Trainer.showLessonList('flashcards')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-info">
+          <div class="mode-name">Flashcards</div>
+          <div class="mode-desc">Vocabulário — múltipla escolha heb↔pt</div>
+        </div>
+        <div class="mode-arrow">→</div>
+      </div>
+      <div class="mode-card" onclick="Trainer.showLessonList('quizzes')">
+        <div class="mode-icon">🎯</div>
+        <div class="mode-info">
+          <div class="mode-name">Quizzes</div>
+          <div class="mode-desc">Montar frase, lacuna, parear</div>
+        </div>
+        <div class="mode-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: PROFESSOR HOME (Subject Grid)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-prof-home" class="screen">
+  <div class="header">
+    <button class="btn-icon" onclick="showScreen('home')">←</button>
+    <div style="flex:1">
+      <div class="header-title">Professor IA</div>
+      <div class="header-sub">Escolha o assunto</div>
+    </div>
   </div>
   <div class="home-body">
     <div id="subjects-grid" class="subjects-grid"></div>
@@ -398,7 +655,7 @@ html, body {
 ══════════════════════════════════════════════════════════════ -->
 <div id="screen-add" class="screen">
   <div class="header">
-    <button class="btn-icon" onclick="showScreen('home')">←</button>
+    <button class="btn-icon" onclick="showProfessorHome()">←</button>
     <div class="header-title" style="flex:1">Novo Assunto</div>
   </div>
   <div class="add-body">
@@ -421,7 +678,64 @@ html, body {
       <input id="add-desc" class="text-input" type="text"
         placeholder="Ex: Iniciante, página 120 do livro...">
     </div>
-    <button class="btn-primary" onclick="createSubject()">Criar Assunto →</button>
+    <button class="btn-setup-primary" onclick="createSubject()">Criar Assunto →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: LESSON LIST (flashcards or quizzes)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-lesson-list" class="screen">
+  <div class="header">
+    <button class="btn-icon" onclick="showScreen('home')">←</button>
+    <div style="flex:1">
+      <div id="ll-title" class="header-title">Flashcards</div>
+      <div id="ll-sub" class="header-sub">Escolha a lição</div>
+    </div>
+  </div>
+  <div class="lesson-list-body" id="lesson-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: EXERCISE (flashcards/quizzes running)
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-exercise" class="screen">
+  <div class="header">
+    <button class="btn-icon" id="btn-ex-back">←</button>
+    <div style="flex:1">
+      <div id="ex-title" class="header-title">—</div>
+    </div>
+  </div>
+  <div class="ex-screen-body">
+    <div class="ex-strip">
+      <div class="pbar"><div class="pbar-fill" id="ex-pbar" style="width:0%"></div></div>
+      <span class="ex-count" id="ex-count">0 / 0</span>
+    </div>
+    <div class="ex-card"   id="ex-card"></div>
+    <div class="feedback"  id="feedback">
+      <span class="fb-icon"  id="fb-icon"></span>
+      <div  class="fb-body">
+        <div class="fb-title"  id="fb-title"></div>
+        <div class="fb-detail" id="fb-detail"></div>
+      </div>
+    </div>
+    <div class="action-area" id="action-area"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCREEN: RESULTS
+══════════════════════════════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="header"><div class="header-title" style="flex:1">Resultado</div></div>
+  <div class="results-hero">
+    <span class="results-icon"  id="r-icon">🎉</span>
+    <div  class="results-title" id="r-title">Lição concluída!</div>
+    <div  class="results-sub"   id="r-sub"></div>
+  </div>
+  <div class="stat-grid" id="stat-grid"></div>
+  <div class="action-area" style="padding: 0 16px 32px;">
+    <button class="btn btn-primary" id="btn-results-home">← Voltar</button>
   </div>
 </div>
 
@@ -439,11 +753,556 @@ html, body {
 'use strict';
 
 // ─────────────────────────────────────────────────────────────
-//  CONSTANTS
+//  SHARED UTILS
 // ─────────────────────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+function esc(s)     { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escLines(s){ return esc(s).replace(/\n/g,'<br>'); }
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ═════════════════════════════════════════════════════════════
+//  PART 1: TRAINER ENGINE (Flashcards + Quizzes)
+// ═════════════════════════════════════════════════════════════
+
+const VOCAB_KEY    = 'heb_trainer_vocab_v1';
+const LICOES_KEY   = 'heb_trainer_licoes_v1';
+const MASTERY_STK  = 5;
+
+// ── STORAGE ───────────────────────────────────────────────────
+const Store = {
+  vocab()  { try { return JSON.parse(localStorage.getItem(VOCAB_KEY))  || {}; } catch { return {}; } },
+  licoes() { try { return JSON.parse(localStorage.getItem(LICOES_KEY)) || {}; } catch { return {}; } },
+
+  saveVocab(d)  { localStorage.setItem(VOCAB_KEY,  JSON.stringify(d)); },
+  saveLicoes(d) { localStorage.setItem(LICOES_KEY, JSON.stringify(d)); },
+
+  recordVocab(id, correct) {
+    const d = this.vocab();
+    if (!d[id]) d[id] = { correct: 0, wrong: 0, streak: 0, mastered: false };
+    const e = d[id];
+    if (correct) { e.correct++; e.streak++; if (e.streak >= MASTERY_STK) e.mastered = true; }
+    else         { e.wrong++;   e.streak = 0; }
+    this.saveVocab(d);
+    return e;
+  },
+
+  recordExercise(licaoId, exId, correct) {
+    const d = this.licoes();
+    if (!d[licaoId])       d[licaoId]       = {};
+    if (!d[licaoId][exId]) d[licaoId][exId] = { correct: 0, wrong: 0 };
+    const e = d[licaoId][exId];
+    if (correct) e.correct++; else e.wrong++;
+    this.saveLicoes(d);
+    return e;
+  },
+
+  lessonMastery(lesson) {
+    if (!lesson.vocab?.length) return 0;
+    const v = this.vocab();
+    const n = lesson.vocab.filter(x => v[x.id]?.mastered).length;
+    return Math.round((n / lesson.vocab.length) * 100);
+  }
+};
+
+// ── QUEUE BUILDER ─────────────────────────────────────────────
+function priority(progress, mastered) {
+  if (mastered) return -1;
+  const { wrong = 0, correct = 0 } = progress || {};
+  if (!wrong && !correct) return 50;
+  return 100 + wrong * 10 - correct;
+}
+
+function buildQueue(lesson, mode) {
+  const vp  = Store.vocab();
+  const lp  = (Store.licoes())[lesson.id] || {};
+  const q   = [];
+
+  if (mode === 'flashcards' || mode === 'all') {
+    for (const v of lesson.vocab || []) {
+      const p = vp[v.id] || {};
+      const m = !!p.mastered;
+      q.push({ uid: `v_${v.id}_hpt`, type: 'multipla_escolha', sub: 'vocab',
+               dir: 'heb_pt', vocab: v, _p: priority(p, m) });
+      if (!m) {
+        q.push({ uid: `v_${v.id}_pth`, type: 'multipla_escolha', sub: 'vocab',
+                 dir: 'pt_heb', vocab: v, _p: priority(p, false) });
+      }
+    }
+  }
+
+  if (mode === 'quizzes' || mode === 'all') {
+    for (const ex of (lesson.exercicios || [])) {
+      const p = lp[ex.id] || {};
+      q.push({ uid: `ex_${ex.id}`, type: ex.tipo, sub: 'phrase',
+               exercise: ex, licaoId: lesson.id, _p: priority(p, false) });
+    }
+  }
+
+  return q.sort((a, b) => b._p - a._p || Math.random() - 0.5);
+}
+
+// ── DISTRACTORS ───────────────────────────────────────────────
+function distractors(vocab, dir, n = 3) {
+  const allVocab = (window.LICOES_MANIFEST || [])
+    .flatMap(l => l.vocab || [])
+    .filter(v => v.id !== vocab.id);
+  const field  = dir === 'heb_pt' ? 'pt' : 'heb';
+  const seen   = new Set([vocab[field]]);
+  const result = [];
+  for (const v of shuffle(allVocab.filter(v => v.cat === vocab.cat))) {
+    if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
+    if (result.length >= n) break;
+  }
+  if (result.length < n) {
+    for (const v of shuffle(allVocab.filter(v => v.cat !== vocab.cat))) {
+      if (!seen.has(v[field])) { seen.add(v[field]); result.push(v); }
+      if (result.length >= n) break;
+    }
+  }
+  return result;
+}
+
+// ── RENDERERS ─────────────────────────────────────────────────
+const R = {
+
+  multipla_escolha(item, card, actions) {
+    const { vocab, dir } = item;
+    const choices = shuffle([vocab, ...distractors(vocab, dir, 3)]);
+    let answered = false;
+
+    if (dir === 'heb_pt') {
+      card.innerHTML = `
+        <div class="ex-type-badge">Múltipla escolha</div>
+        <div class="ex-question">O que significa esta palavra?</div>
+        <div class="heb-xl">${vocab.heb}</div>
+        <div class="translit">${vocab.translit}</div>
+        <div class="opts" id="opts"></div>`;
+      choices.forEach(v => {
+        const b = document.createElement('button');
+        b.className = 'opt'; b.textContent = v.pt; b.dataset.id = v.id;
+        b.onclick = () => check(b, v.id === vocab.id, vocab.pt);
+        $('opts').appendChild(b);
+      });
+    } else {
+      card.innerHTML = `
+        <div class="ex-type-badge">Múltipla escolha</div>
+        <div class="ex-question">Qual é a palavra em hebraico?</div>
+        <div style="font-size:1.3rem;text-align:center;margin:16px 0;font-weight:600;">${vocab.pt}</div>
+        <div class="opts" id="opts"></div>`;
+      choices.forEach(v => {
+        const b = document.createElement('button');
+        b.className = 'opt heb'; b.textContent = v.heb; b.dataset.id = v.id;
+        b.onclick = () => check(b, v.id === vocab.id, vocab.heb);
+        $('opts').appendChild(b);
+      });
+    }
+
+    function check(btn, correct, correctText) {
+      if (answered) return;
+      answered = true;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        const ans = $('opts').querySelector(`[data-id="${vocab.id}"]`);
+        if (ans) ans.classList.add('show-ans');
+      }
+      $('opts').querySelectorAll('.opt').forEach(b => b.classList.add('disabled'));
+      Trainer.recordAnswer(item, correct, correctText);
+    }
+  },
+
+  montar_frase(item, card, actions) {
+    const { exercise } = item;
+    const bankWords = shuffle(exercise.banco);
+    let placed  = [];
+    let checked = false;
+
+    const render = () => {
+      card.innerHTML = `
+        <div class="ex-type-badge">Montar frase</div>
+        <div class="ex-question">${exercise.instrucao || 'Monte a frase em hebraico:'}</div>
+        <div style="font-size:.9rem;color:var(--muted);text-align:center;margin-bottom:10px;font-style:italic;">
+          "${exercise.frase_pt}"</div>
+        <div class="sentence-area" id="sa">
+          ${placed.length
+            ? placed.map((w, i) => `<span class="tile placed" data-i="${i}">${w}</span>`).join('')
+            : '<span class="sa-placeholder">Toque nas palavras abaixo ↓</span>'}
+        </div>
+        <div class="word-bank" id="wb">
+          ${bankWords.map((w, i) =>
+            `<span class="tile ${placed.includes(w) ? 'used' : ''}" data-bi="${i}">${w}</span>`
+          ).join('')}
+        </div>`;
+
+      card.querySelectorAll('#wb .tile:not(.used)').forEach(t => {
+        t.onclick = () => { placed.push(t.textContent.trim()); render(); renderBtn(); };
+      });
+      card.querySelectorAll('#sa .tile').forEach(t => {
+        t.onclick = () => { placed.splice(+t.dataset.i, 1); render(); renderBtn(); };
+      });
+    };
+
+    const renderBtn = () => {
+      if (checked) return;
+      actions.innerHTML = '';
+      const b = document.createElement('button');
+      b.className = 'btn btn-check' + (placed.length ? '' : ' btn-off');
+      b.textContent = 'Verificar';
+      b.onclick = () => {
+        if (checked) return;
+        checked = true;
+        const ans   = placed.join(' ');
+        const ok    = ans === exercise.frase_heb;
+        const area  = card.querySelector('#sa');
+        if (area) area.classList.add(ok ? 'valid' : 'invalid');
+        Trainer.recordAnswer(item, ok, exercise.frase_heb);
+      };
+      actions.appendChild(b);
+    };
+
+    render();
+    renderBtn();
+  },
+
+  lacuna(item, card, actions) {
+    const { exercise } = item;
+    let answered = false;
+
+    const tmplHtml = (exercise.template || '').replace(
+      '___',
+      '<span class="blank-line" id="gap"></span>'
+    );
+
+    card.innerHTML = `
+      <div class="ex-type-badge">Complete a frase</div>
+      <div class="ex-question">${exercise.instrucao || 'Preencha a lacuna:'}</div>
+      ${exercise.traducao
+        ? `<div style="font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:8px;font-style:italic;">
+             "${exercise.traducao}"</div>` : ''}
+      <div class="lacuna-tmpl">${tmplHtml}</div>
+      <div class="opts" id="opts"></div>`;
+
+    (exercise.opcoes || []).forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'opt heb'; b.textContent = opt;
+      b.onclick = () => {
+        if (answered) return;
+        answered = true;
+        const ok = opt === exercise.resposta;
+        b.classList.add(ok ? 'correct' : 'wrong');
+        $('opts').querySelectorAll('.opt').forEach(x => {
+          if (x.textContent === exercise.resposta) x.classList.add('show-ans');
+          x.classList.add('disabled');
+        });
+        const gap = card.querySelector('#gap');
+        if (gap) gap.outerHTML =
+          `<span class="blank-filled ${ok ? 'correct' : 'wrong'}">${opt}</span>`;
+        Trainer.recordAnswer(item, ok, exercise.resposta);
+      };
+      $('opts').appendChild(b);
+    });
+  },
+
+  parear(item, card, actions) {
+    const { exercise } = item;
+    const pares = exercise.pares;
+
+    const leftOrder  = shuffle(pares.map((_, i) => i));
+    const rightOrder = shuffle(pares.map((_, i) => i));
+
+    let selLeft  = null;
+    let userPairs = {};
+    let correctness = {};
+    let checked = false;
+
+    const isPairedLeft  = i => i in userPairs;
+    const isPairedRight = i => Object.values(userPairs).map(Number).includes(i);
+
+    const render = () => {
+      card.innerHTML = `
+        <div class="ex-type-badge">Conectar pares</div>
+        <div class="ex-question">${exercise.instrucao || 'Conecte cada item à sua tradução:'}</div>
+        <div class="match-grid">
+          <div class="match-col" id="col-l"></div>
+          <div class="match-col" id="col-r"></div>
+        </div>`;
+
+      const colL = $('col-l');
+      const colR = $('col-r');
+
+      leftOrder.forEach(origIdx => {
+        const div = document.createElement('div');
+        div.className = 'match-item heb';
+        div.textContent = pares[origIdx][0];
+        if (checked) {
+          div.classList.add(correctness[origIdx] ? 'paired' : 'wrong-pair');
+        } else if (isPairedLeft(origIdx)) {
+          div.classList.add('paired');
+        } else if (selLeft === origIdx) {
+          div.classList.add('selected');
+        } else {
+          div.onclick = () => { selLeft = (selLeft === origIdx) ? null : origIdx; render(); };
+        }
+        colL.appendChild(div);
+      });
+
+      rightOrder.forEach(origIdx => {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.textContent = pares[origIdx][1];
+        if (checked) {
+          const leftOwner = Object.entries(userPairs)
+            .find(([, r]) => Number(r) === origIdx);
+          if (leftOwner) div.classList.add(correctness[leftOwner[0]] ? 'paired' : 'wrong-pair');
+        } else if (isPairedRight(origIdx)) {
+          div.classList.add('paired');
+        } else if (selLeft !== null) {
+          div.onclick = () => {
+            userPairs[selLeft] = origIdx;
+            selLeft = null;
+            render(); updateVerifyBtn();
+          };
+        }
+        colR.appendChild(div);
+      });
+    };
+
+    const updateVerifyBtn = () => {
+      const b = actions.querySelector('.btn-check');
+      if (b) b.classList.toggle('btn-off', Object.keys(userPairs).length < pares.length);
+    };
+
+    actions.innerHTML = '';
+    const verifyBtn = document.createElement('button');
+    verifyBtn.className = 'btn btn-check btn-off';
+    verifyBtn.textContent = 'Verificar';
+    verifyBtn.onclick = () => {
+      if (checked) return;
+      checked = true;
+      let nCorrect = 0;
+      const wrongLines = [];
+      Object.entries(userPairs).forEach(([l, r]) => {
+        const ok = Number(l) === Number(r);
+        correctness[l] = ok;
+        if (ok) nCorrect++;
+        else {
+          const left  = pares[Number(l)][0];
+          const right = pares[Number(l)][1];
+          wrongLines.push(`${left} → ${right}`);
+        }
+      });
+      render();
+      Trainer.recordAnswer(item, nCorrect === pares.length, wrongLines.join('\n'));
+    };
+    actions.appendChild(verifyBtn);
+    render();
+  }
+};
+
+// ── TRAINER APP ───────────────────────────────────────────────
+const Trainer = {
+  lesson:   null,
+  queue:    [],
+  idx:      0,
+  sCorrect: 0,
+  sWrong:   0,
+  mode:     'flashcards',  // 'flashcards' or 'quizzes'
+
+  showLessonList(mode) {
+    this.mode = mode;
+    const isFlash = mode === 'flashcards';
+    $('ll-title').textContent = isFlash ? 'Flashcards' : 'Quizzes';
+    $('ll-sub').textContent   = 'Escolha a lição';
+
+    const lessons = window.LICOES_MANIFEST || [];
+    const list    = $('lesson-list');
+
+    if (!lessons.length) {
+      list.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px 0">
+        Nenhuma lição encontrada.</p>`;
+      showScreen('lesson-list'); return;
+    }
+
+    const card = (l) => {
+      const status = l.status || 'revisao';
+      const pct    = Store.lessonMastery(l);
+      const tot    = isFlash ? (l.vocab?.length || 0) : (l.exercicios?.length || 0);
+      if (tot === 0) return '';
+      const mast   = isFlash
+        ? (l.vocab || []).filter(v => Store.vocab()[v.id]?.mastered).length
+        : 0;
+      const done   = isFlash && pct === 100;
+      const aulaMeta = l.aula ? ` · Aula ${l.aula}` : '';
+      const badgeCls = done ? 'done' : (status !== 'revisao' ? status : '');
+      const badgeText = isFlash ? `${pct}% dominado` : `${tot} exercícios`;
+      const subtitle = isFlash
+        ? `${mast} de ${tot} palavras dominadas`
+        : `Montar frase, lacuna, parear`;
+      return `<div class="lesson-card ${status}" onclick="Trainer.start('${l.id}')">
+        <div class="lc-top">
+          <div>
+            <div class="lc-title">${l.titulo}</div>
+            <div class="lc-meta">Módulo ${l.modulo}${aulaMeta}</div>
+          </div>
+          <div class="lc-badge ${badgeCls}">${badgeText}</div>
+        </div>
+        ${isFlash ? `<div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
+        <div class="pbar-label">${subtitle}</div>` : `<div class="pbar-label">${subtitle}</div>`}
+      </div>`;
+    };
+
+    const section = (cls, icon, label, items) => {
+      const html = items.map(card).filter(Boolean).join('');
+      if (!html) return '';
+      return `<div class="section-hdr ${cls}">
+        <span class="sh-icon">${icon}</span>
+        <span class="sh-title">${label}</span>
+      </div>` + html;
+    };
+
+    const atual    = lessons.filter(l => l.status === 'atual');
+    const anterior = lessons.filter(l => l.status === 'anterior');
+    const revisao  = lessons.filter(l => !l.status || l.status === 'revisao');
+
+    list.innerHTML =
+      section('atual',    '📖', 'Aula Atual',    atual) +
+      section('anterior', '📋', 'Aulas Anteriores', anterior) +
+      section('revisao',  '◎',  'Revisão Geral', revisao);
+
+    showScreen('lesson-list');
+  },
+
+  start(id) {
+    const l = (window.LICOES_MANIFEST || []).find(x => x.id === id);
+    if (!l) return;
+    this.lesson   = l;
+    this.queue    = buildQueue(l, this.mode);
+    this.idx      = 0;
+    this.sCorrect = 0;
+    this.sWrong   = 0;
+
+    if (this.queue.length === 0) {
+      showToast(this.mode === 'flashcards'
+        ? 'Nenhum vocabulário nesta lição.'
+        : 'Nenhum exercício nesta lição.');
+      return;
+    }
+
+    $('ex-title').textContent = l.titulo;
+    $('btn-ex-back').onclick = () => {
+      if (confirm('Sair? O progresso parcial foi salvo.'))
+        this.showLessonList(this.mode);
+    };
+    showScreen('exercise');
+    this.show();
+  },
+
+  show() {
+    if (this.idx >= this.queue.length) { this.results(); return; }
+
+    const item    = this.queue[this.idx];
+    const card    = $('ex-card');
+    const actions = $('action-area');
+    card.innerHTML = ''; actions.innerHTML = '';
+    this.hideFeedback();
+
+    const pct = Math.round((this.idx / this.queue.length) * 100);
+    $('ex-pbar').style.width = pct + '%';
+    $('ex-count').textContent = `${this.idx + 1} / ${this.queue.length}`;
+
+    const renderer = R[item.type];
+    if (renderer) renderer(item, card, actions);
+    else card.innerHTML = `<p>Tipo desconhecido: <code>${item.type}</code></p>`;
+  },
+
+  recordAnswer(item, correct, correctText) {
+    if (correct) this.sCorrect++; else this.sWrong++;
+
+    if (item.sub === 'vocab') {
+      Store.recordVocab(item.vocab.id, correct);
+    } else {
+      Store.recordExercise(item.licaoId || this.lesson.id, item.exercise.id, correct);
+    }
+
+    this.showFeedback(correct, correctText);
+
+    const actions = $('action-area');
+    actions.innerHTML = '';
+    const nb = document.createElement('button');
+    nb.className = 'btn btn-primary';
+    nb.textContent = (this.idx + 1 < this.queue.length) ? 'Próximo →' : 'Ver resultado';
+    nb.onclick = () => { this.idx++; this.show(); };
+    actions.appendChild(nb);
+  },
+
+  showFeedback(ok, txt) {
+    const fb = $('feedback');
+    fb.className = `feedback show ${ok ? 'correct' : 'wrong'}`;
+    $('fb-icon').textContent  = ok ? '✓' : '✗';
+    $('fb-title').textContent = ok ? 'Correto!' : 'Incorreto';
+    if (ok || !txt) {
+      $('fb-detail').textContent = '';
+    } else {
+      $('fb-detail').innerHTML = txt.split('\n')
+        .map(line => `<div>✗ ${line}</div>`).join('');
+    }
+  },
+  hideFeedback() { $('feedback').className = 'feedback'; },
+
+  results() {
+    const total  = this.sCorrect + this.sWrong;
+    const pct    = total ? Math.round((this.sCorrect / total) * 100) : 0;
+    const mastery = Store.lessonMastery(this.lesson);
+
+    $('r-icon').textContent  = pct >= 80 ? '🎉' : pct >= 50 ? '💪' : '📚';
+    $('r-title').textContent = pct >= 80 ? 'Excelente!' : pct >= 50 ? 'Bom progresso!' : 'Continue praticando!';
+    $('r-sub').textContent   = this.lesson.titulo;
+
+    $('stat-grid').innerHTML = [
+      [this.sCorrect, 'Acertos'],
+      [this.sWrong,   'Erros'],
+      [pct + '%',     'Aproveitamento'],
+      [mastery + '%', 'Vocab dominado']
+    ].map(([n, l]) => `
+      <div class="stat-card">
+        <div class="stat-n">${n}</div>
+        <div class="stat-lbl">${l}</div>
+      </div>`).join('');
+
+    $('btn-results-home').onclick = () => this.showLessonList(this.mode);
+    showScreen('results');
+  }
+};
+
+
+// ═════════════════════════════════════════════════════════════
+//  PART 2: PROFESSOR IA (Chat)
+// ═════════════════════════════════════════════════════════════
+
 const GEMINI_MODEL_DEFAULT = 'gemini-3.1-flash-lite';
 
-// Rules — fallback embutido usado quando o fetch falha (ex: protocolo file://)
 const PROFESSOR_RULES_FALLBACK = `## Regras Absolutas — Nunca Viole
 
 ### Sem Transliteração — REGRA ABSOLUTA
@@ -512,15 +1371,13 @@ function geminiUrl() {
   const model = localStorage.getItem('prof_model') || GEMINI_MODEL_DEFAULT;
   return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=`;
 }
-const MAX_HISTORY   = 12;   // max messages kept in API context
-const MAX_IMG_PX    = 1024; // resize photos to fit this dimension
+const MAX_HISTORY   = 12;
+const MAX_IMG_PX    = 1024;
 const IMG_QUALITY   = 0.82;
 
 const EMOJIS = ['🇮🇱','📚','🔢','🌍','🗺️','🖊️','🔬','🎵','🌱','📐','🏛️','🌐','📖','🎓','🧪','💡'];
 
-// ─────────────────────────────────────────────────────────────
-//  STORAGE
-// ─────────────────────────────────────────────────────────────
+// ── PROFESSOR STORAGE ─────────────────────────────────────────
 const DB = {
   getApiKey:      ()      => localStorage.getItem('prof_api_key') || '',
   setApiKey:      (k)     => localStorage.setItem('prof_api_key', k),
@@ -544,88 +1401,68 @@ const DB = {
   },
 };
 
-// ─────────────────────────────────────────────────────────────
-//  SCREEN MANAGER
-// ─────────────────────────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-}
-
-// ─────────────────────────────────────────────────────────────
-//  SETUP
-// ─────────────────────────────────────────────────────────────
+// ── SETUP ─────────────────────────────────────────────────────
 let currentProvider = 'auto';
 
 function selectProvider(p) {
   currentProvider = p;
-  document.getElementById('tab-auto').classList.toggle('active',   p === 'auto');
-  document.getElementById('tab-gemini').classList.toggle('active', p === 'gemini');
-  document.getElementById('tab-claude').classList.toggle('active', p === 'claude');
+  $('tab-auto').classList.toggle('active',   p === 'auto');
+  $('tab-gemini').classList.toggle('active', p === 'gemini');
+  $('tab-claude').classList.toggle('active', p === 'claude');
 
   const isAuto   = p === 'auto';
   const isGemini = p === 'gemini' || isAuto;
   const isClaude = p === 'claude' || isAuto;
 
-  document.getElementById('fields-gemini').style.display    = isGemini ? '' : 'none';
-  document.getElementById('fields-claude').style.display    = isClaude ? '' : 'none';
-  document.getElementById('auto-separator').style.display   = isAuto   ? 'flex' : 'none';
-  document.getElementById('auto-hint').style.display        = isAuto   ? '' : 'none';
+  $('fields-gemini').style.display    = isGemini ? '' : 'none';
+  $('fields-claude').style.display    = isClaude ? '' : 'none';
+  $('auto-separator').style.display   = isAuto   ? 'flex' : 'none';
+  $('auto-hint').style.display        = isAuto   ? '' : 'none';
 }
 
 function saveApiKey() {
   DB.setProvider(currentProvider);
 
   if (currentProvider === 'auto') {
-    const geminiKey = document.getElementById('api-key-input').value.trim();
-    const claudeKey = document.getElementById('claude-key-input').value.trim();
-
-    if (!geminiKey && !claudeKey) {
-      showToast('Informe ao menos uma chave (Gemini ou Claude).');
-      return;
-    }
-
+    const geminiKey = $('api-key-input').value.trim();
+    const claudeKey = $('claude-key-input').value.trim();
+    if (!geminiKey && !claudeKey) { showToast('Informe ao menos uma chave.'); return; }
     if (geminiKey) {
       if (geminiKey.length < 20) { showToast('Chave Gemini inválida.'); return; }
       DB.setApiKey(geminiKey);
-      const m = document.getElementById('model-input').value.trim();
+      const m = $('model-input').value.trim();
       if (m) localStorage.setItem('prof_model', m);
     }
-
     if (claudeKey) {
       if (claudeKey.length < 20) { showToast('Chave Claude inválida.'); return; }
       DB.setClaudeKey(claudeKey);
-      const m = document.getElementById('claude-model-input').value.trim();
+      const m = $('claude-model-input').value.trim();
       DB.setClaudeModel(m || 'claude-haiku-4-5-20251001');
     }
-
   } else if (currentProvider === 'claude') {
-    const k = document.getElementById('claude-key-input').value.trim();
+    const k = $('claude-key-input').value.trim();
     if (k.length < 20) { showToast('Chave inválida.'); return; }
     DB.setClaudeKey(k);
-    const m = document.getElementById('claude-model-input').value.trim();
+    const m = $('claude-model-input').value.trim();
     DB.setClaudeModel(m || 'claude-haiku-4-5-20251001');
-
   } else {
-    // gemini
-    const k = document.getElementById('api-key-input').value.trim();
+    const k = $('api-key-input').value.trim();
     if (k.length < 20) { showToast('Chave inválida.'); return; }
     DB.setApiKey(k);
-    const m = document.getElementById('model-input').value.trim();
+    const m = $('model-input').value.trim();
     if (m) localStorage.setItem('prof_model', m);
   }
 
-  renderHome();
   showScreen('home');
 }
 
 function openSetup() {
   const provider = DB.getProvider();
   selectProvider(provider);
-  document.getElementById('claude-key-input').value   = DB.getClaudeKey();
-  document.getElementById('claude-model-input').value = DB.getClaudeModel();
-  document.getElementById('api-key-input').value      = DB.getApiKey();
-  document.getElementById('model-input').value        = localStorage.getItem('prof_model') || GEMINI_MODEL_DEFAULT;
+  $('claude-key-input').value   = DB.getClaudeKey();
+  $('claude-model-input').value = DB.getClaudeModel();
+  $('api-key-input').value      = DB.getApiKey();
+  $('model-input').value        = localStorage.getItem('prof_model') || GEMINI_MODEL_DEFAULT;
   showScreen('setup');
 }
 
@@ -644,12 +1481,17 @@ function showGeminiHelp() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-//  HOME — subject grid
-// ─────────────────────────────────────────────────────────────
-function renderHome() {
+// ── PROFESSOR HOME ────────────────────────────────────────────
+function showProfessorHome() {
+  const hasKey = DB.getClaudeKey() || DB.getApiKey();
+  if (!hasKey) { openSetup(); return; }
+  renderProfHome();
+  showScreen('prof-home');
+}
+
+function renderProfHome() {
   const subjects = DB.getSubjects();
-  const grid = document.getElementById('subjects-grid');
+  const grid = $('subjects-grid');
 
   const cards = subjects.map(s => {
     const sess  = DB.getSession(s.id);
@@ -673,17 +1515,15 @@ function renderHome() {
     </div>`;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  ADD SUBJECT
-// ─────────────────────────────────────────────────────────────
+// ── ADD SUBJECT ───────────────────────────────────────────────
 let selectedEmoji = '📚';
 
 function showAddScreen() {
   selectedEmoji = '📚';
-  document.getElementById('add-name').value = '';
-  document.getElementById('add-lang').value = '';
-  document.getElementById('add-desc').value = '';
-  document.getElementById('emoji-grid').innerHTML = EMOJIS.map(e =>
+  $('add-name').value = '';
+  $('add-lang').value = '';
+  $('add-desc').value = '';
+  $('emoji-grid').innerHTML = EMOJIS.map(e =>
     `<button class="emoji-btn ${e === selectedEmoji ? 'selected' : ''}"
        onclick="pickEmoji('${e}', this)">${e}</button>`
   ).join('');
@@ -697,34 +1537,32 @@ function pickEmoji(e, btn) {
 }
 
 function createSubject() {
-  const name = document.getElementById('add-name').value.trim();
+  const name = $('add-name').value.trim();
   if (!name) { showToast('Digite o nome do assunto.'); return; }
   const id   = 'subj_' + Date.now();
-  const lang = document.getElementById('add-lang').value.trim();
-  const desc = document.getElementById('add-desc').value.trim();
+  const lang = $('add-lang').value.trim();
+  const desc = $('add-desc').value.trim();
   const subjects = DB.getSubjects();
   subjects.push({ id, name, icon: selectedEmoji, tts_lang: lang, desc, created: Date.now() });
   DB.setSubjects(subjects);
-  renderHome();
-  showScreen('home');
+  renderProfHome();
+  showScreen('prof-home');
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SESSION STATE
-// ─────────────────────────────────────────────────────────────
+// ── SESSION STATE ─────────────────────────────────────────────
 let activeSubject = null;
-let apiHistory    = [];    // [{role, parts}] sent to Gemini
-let pendingImgs   = [];    // [{base64, mime, dataUrl}]
+let apiHistory    = [];
+let pendingImgs   = [];
 
 function startSession(subjectId) {
   const subjects = DB.getSubjects();
   activeSubject  = subjects.find(s => s.id === subjectId);
   if (!activeSubject) return;
 
-  document.getElementById('prof-name').textContent = activeSubject.icon + ' ' + activeSubject.name;
-  document.getElementById('prof-sub').textContent  = activeSubject.desc || 'Sessão de estudos';
+  $('prof-name').textContent = activeSubject.icon + ' ' + activeSubject.name;
+  $('prof-sub').textContent  = activeSubject.desc || 'Sessão de estudos';
 
-  const messagesEl = document.getElementById('chat-messages');
+  const messagesEl = $('chat-messages');
   messagesEl.innerHTML = '';
   apiHistory = [];
   clearPendingImage();
@@ -734,7 +1572,6 @@ function startSession(subjectId) {
   const saved = DB.getSession(subjectId);
 
   if (saved && saved.history && saved.history.length >= 2) {
-    // Restore previous session — show last 4 messages grayed
     apiHistory = saved.history;
     messagesEl.innerHTML = '<div class="session-divider">— Sessão anterior —</div>';
     const preview = apiHistory.slice(-4);
@@ -742,15 +1579,12 @@ function startSession(subjectId) {
       const txt = (m.parts || []).filter(p => p.text).map(p => p.text).join('');
       if (txt) appendBubble(m.role === 'user' ? 'user' : 'prof', txt, null, true);
     });
-    // Show resume prompt without calling API — waits for user to write first
     const resumeEl = document.createElement('div');
     resumeEl.className = 'session-divider';
     resumeEl.innerHTML = '— Sessão pausada. Escreva qualquer coisa para continuar —';
     messagesEl.appendChild(resumeEl);
-    // Prepend resume context to next user message via a flag
     window._pendingResume = true;
   } else {
-    // First time — professor opens the class
     callGemini([{ role: 'user', parts: [{ text: 'Olá professor! Estou pronto para começar.' }] }]);
   }
 }
@@ -765,13 +1599,10 @@ function exitSession() {
   activeSubject = null;
   apiHistory    = [];
   clearPendingImage();
-  renderHome();
-  showScreen('home');
+  showProfessorHome();
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SYSTEM PROMPT
-// ─────────────────────────────────────────────────────────────
+// ── SYSTEM PROMPT ─────────────────────────────────────────────
 function buildSystemPrompt() {
   const s       = activeSubject;
   const know    = DB.getKnowledge(s.id);
@@ -815,9 +1646,7 @@ INSTRUÇÕES TÉCNICAS DO APP:
   Exemplo: ::K::{"שלום": "sabe", "משפחה": "fragil", "כתב": "nao_sabe"}`;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SHARED RESPONSE HANDLER
-// ─────────────────────────────────────────────────────────────
+// ── SHARED RESPONSE HANDLER ──────────────────────────────────
 function handleAIResponse(raw, trimmed) {
   const { clean, updates } = parseKnowledgeBlock(raw);
 
@@ -833,9 +1662,7 @@ function handleAIResponse(raw, trimmed) {
   appendBubble('prof', clean);
 }
 
-// ─────────────────────────────────────────────────────────────
-//  GEMINI FETCH (pure — throws on error)
-// ─────────────────────────────────────────────────────────────
+// ── GEMINI FETCH ──────────────────────────────────────────────
 async function fetchGemini(messages) {
   const apiKey = DB.getApiKey();
   if (!apiKey) throw new Error('Chave Gemini não configurada.');
@@ -882,16 +1709,13 @@ async function fetchGemini(messages) {
   return { raw, trimmed };
 }
 
-// ─────────────────────────────────────────────────────────────
-//  CLAUDE FETCH (pure — throws on error)
-// ─────────────────────────────────────────────────────────────
+// ── CLAUDE FETCH ──────────────────────────────────────────────
 async function fetchClaude(messages) {
   const apiKey = DB.getClaudeKey();
   if (!apiKey) throw new Error('Chave Claude não configurada.');
 
   const trimmed = messages.slice(-MAX_HISTORY);
 
-  // Convert Gemini format → Claude format
   const claudeMsgs = trimmed.map(m => {
     const role = m.role === 'model' ? 'assistant' : 'user';
     const parts = m.parts || [];
@@ -909,7 +1733,6 @@ async function fetchClaude(messages) {
     return { role, content };
   });
 
-  // Claude requires alternating user/assistant — merge consecutive same-role messages
   const merged = [];
   for (const msg of claudeMsgs) {
     const last = merged[merged.length - 1];
@@ -947,7 +1770,6 @@ async function fetchClaude(messages) {
   const raw  = data.content?.[0]?.text || '';
   if (!raw) throw new Error('Resposta vazia da API Claude.');
 
-  // Cost tracking (Haiku: $0.25/M input, $1.25/M output)
   const usage     = data.usage || {};
   const costUSD   = ((usage.input_tokens || 0) * 0.25 + (usage.output_tokens || 0) * 1.25) / 1_000_000;
   const totalCost = DB.addCost(costUSD);
@@ -956,9 +1778,7 @@ async function fetchClaude(messages) {
   return { raw, trimmed };
 }
 
-// ─────────────────────────────────────────────────────────────
-//  AI DISPATCHER (main entry point — called from everywhere)
-// ─────────────────────────────────────────────────────────────
+// ── AI DISPATCHER ─────────────────────────────────────────────
 async function callGemini(messages) {
   const provider = DB.getProvider();
   setSendEnabled(false);
@@ -968,13 +1788,10 @@ async function callGemini(messages) {
     if (provider === 'gemini') {
       const { raw, trimmed } = await fetchGemini(messages);
       handleAIResponse(raw, trimmed);
-
     } else if (provider === 'claude') {
       const { raw, trimmed } = await fetchClaude(messages);
       handleAIResponse(raw, trimmed);
-
     } else {
-      // auto: try Gemini first, fall back to Claude
       try {
         const { raw, trimmed } = await fetchGemini(messages);
         handleAIResponse(raw, trimmed);
@@ -984,7 +1801,6 @@ async function callGemini(messages) {
         handleAIResponse(raw, trimmed);
       }
     }
-
   } catch (e) {
     appendBubble('prof', '⚠️ ' + e.message);
   } finally {
@@ -994,22 +1810,19 @@ async function callGemini(messages) {
 }
 
 function updateCostBadge(sessionDelta, total) {
-  const badge = document.getElementById('cost-badge');
+  const badge = $('cost-badge');
   if (!badge) return;
   badge.style.display = '';
   badge.textContent = `💰 $${total.toFixed(4)}`;
   badge.title = `Última mensagem: $${sessionDelta.toFixed(5)}`;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SEND MESSAGE
-// ─────────────────────────────────────────────────────────────
+// ── SEND MESSAGE ──────────────────────────────────────────────
 function handleSend() {
-  const input = document.getElementById('chat-input');
+  const input = $('chat-input');
   const text  = input.value.trim();
   if (!text && pendingImgs.length === 0) return;
 
-  // If resuming a saved session, prepend context to first message
   let fullText = text;
   if (window._pendingResume) {
     window._pendingResume = false;
@@ -1038,24 +1851,20 @@ function onInputKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  RENDER MESSAGES
-// ─────────────────────────────────────────────────────────────
+// ── RENDER MESSAGES ───────────────────────────────────────────
 function appendBubble(role, text, imgData, isPrev) {
-  const container = document.getElementById('chat-messages');
+  const container = $('chat-messages');
   const div = document.createElement('div');
   div.className = 'msg ' + role + (isPrev ? ' prev' : '');
 
   let html = '';
 
-  // Image thumbnails (user messages with photos)
   if (imgData && imgData.length > 0 && role === 'user') {
     imgData.forEach((img, i) => {
       html += `<img class="msg-img" src="${img.dataUrl}" alt="foto ${i+1}">`;
     });
   }
 
-  // Text bubble
   if (text) {
     const content = (role === 'prof') ? renderProfText(text) : escLines(text);
     html += `<div class="msg-bubble">${content}</div>`;
@@ -1067,60 +1876,39 @@ function appendBubble(role, text, imgData, isPrev) {
 }
 
 function enforceHebrewRules(text) {
-  // 1. Strip nikud (Hebrew vowel points U+05B0–U+05C7)
   text = text.replace(/[\u05B0-\u05C7]/g, '');
-
-  // 2. Strip transliteration in parentheses immediately after Hebrew or ]
-  // e.g. [שלום] (shalom) → [שלום]   |   ספר (sefer) → ספר
   text = text.replace(/([\u05D0-\u05EA\]]+)\s*\(([^)\u0080-\uFFFF]{1,60})\)/g, '$1');
-
-  // 3. Strip any remaining (ASCII-only text) — catches leftover transliterations
-  // e.g. " (Ani koneh sefer)" → ""    but keeps "(área)" because á > U+007F
   text = text.replace(/\s\(([^\u0080-\uFFFF)]{2,60})\)/g, '');
-
-  // 4. Strip book/page references
   text = text.replace(/\b(abra|olhe|veja|procure|encontre)\s+(n[ao]s?\s+)?(p[áa]gina|livro|exerc[íi]cio|tabela)[^.!?\n]*/gi, '');
-
   return text;
 }
 
 function renderProfText(raw) {
-  // 0. Strip ::K:: block (safety — in case it wasn't stripped before display)
   const kIdx = raw.lastIndexOf('::K::');
   if (kIdx !== -1) raw = raw.slice(0, kIdx).trim();
 
-  // 1. Extract [word] patterns BEFORE stripping nikud, so TTS gets original
   const lang = activeSubject?.tts_lang || '';
   const ttsTokens = [];
   raw = raw.replace(/\[([^\]\n]+)\]/g, (_, word) => {
     const idx = ttsTokens.length;
-    // displayWord: nikud stripped (student sees clean text)
-    // ttsWord: original with nikud (TTS pronounces correctly)
     const displayWord = word.replace(/[\u05B0-\u05C7]/g, '');
     ttsTokens.push({ ttsWord: word, displayWord });
     return `\x01TTS${idx}\x01`;
   });
 
-  // 2. Enforce Hebrew rules on the rest (nikud + transliteration + book refs)
   raw = enforceHebrewRules(raw);
-
-  // 3. Escape HTML
   let t = esc(raw);
 
-  // 4. Restore TTS tokens as spans with ▶ button
   t = t.replace(/\x01TTS(\d+)\x01/g, (_, i) => {
     const { ttsWord, displayWord } = ttsTokens[parseInt(i)];
     if (!lang) return `<span class="heb-word">${esc(displayWord)}</span>`;
-    const wEsc = escAttr(ttsWord);     // original with nikud → correct TTS
+    const wEsc = escAttr(ttsWord);
     const lEsc = escAttr(lang);
     return `<span class="heb-word">${esc(displayWord)}&nbsp;<button class="play-btn" onclick="speak('${wEsc}','${lEsc}')" title="Ouvir">▶</button></span>`;
   });
 
-  // 5. **bold**
   t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // 6. *italic*
   t = t.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-  // 7. Newlines
   t = t.replace(/\n/g, '<br>');
 
   return t;
@@ -1138,9 +1926,7 @@ function parseKnowledgeBlock(raw) {
   catch { return { clean: raw.trim(), updates: {} }; }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  TTS — Text to Speech
-// ─────────────────────────────────────────────────────────────
+// ── TTS ───────────────────────────────────────────────────────
 function speak(text, lang) {
   if (!window.speechSynthesis) { showToast('Seu navegador não suporta áudio.'); return; }
 
@@ -1151,25 +1937,22 @@ function speak(text, lang) {
     u.rate  = 0.78;
     u.pitch = 1;
 
-    // Tenta encontrar uma voz exata para o idioma, depois qualquer voz do idioma
     const voices  = speechSynthesis.getVoices();
     const exact   = voices.find(v => v.lang === lang);
     const partial = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
     const chosen  = exact || partial || null;
     if (chosen) u.voice = chosen;
     else if (!exact && !partial) {
-      showToast(`Voz ${lang} não encontrada. Instale o pacote de idioma no sistema.`);
+      showToast(`Voz ${lang} não encontrada.`);
     }
 
     u.onerror = () => showToast('Erro ao reproduzir áudio.');
     speechSynthesis.speak(u);
   };
 
-  // Chrome carrega vozes de forma assíncrona — aguarda se necessário
   const voices = speechSynthesis.getVoices();
-  if (voices.length > 0) {
-    doSpeak();
-  } else {
+  if (voices.length > 0) doSpeak();
+  else {
     speechSynthesis.onvoiceschanged = () => {
       speechSynthesis.onvoiceschanged = null;
       doSpeak();
@@ -1177,17 +1960,12 @@ function speak(text, lang) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  CAMERA / IMAGE
-// ─────────────────────────────────────────────────────────────
+// ── CAMERA / IMAGE ────────────────────────────────────────────
 function triggerCamera() {
-  document.getElementById('file-input').click();
+  $('file-input').click();
 }
 
 function onFileSelected(input) {
-  const file = input.files[0];
-  if (!file) return;
-
   const files = Array.from(input.files);
   if (!files.length) return;
 
@@ -1224,7 +2002,7 @@ function resizeImage(dataUrl, mimeType, callback) {
 }
 
 function renderPendingPreviews() {
-  const wrap = document.getElementById('img-pending-wrap');
+  const wrap = $('img-pending-wrap');
   wrap.style.display = 'flex';
   wrap.style.flexWrap = 'wrap';
   wrap.style.gap = '8px';
@@ -1243,17 +2021,15 @@ function removePendingImg(idx) {
 
 function clearPendingImage() {
   pendingImgs = [];
-  document.getElementById('img-pending-wrap').style.display = 'none';
-  document.getElementById('img-pending-wrap').innerHTML = '';
+  $('img-pending-wrap').style.display = 'none';
+  $('img-pending-wrap').innerHTML = '';
 }
 
-// ─────────────────────────────────────────────────────────────
-//  UI HELPERS
-// ─────────────────────────────────────────────────────────────
+// ── UI HELPERS ────────────────────────────────────────────────
 let typingEl = null;
 
 function showTyping(on) {
-  const container = document.getElementById('chat-messages');
+  const container = $('chat-messages');
   if (on) {
     typingEl = document.createElement('div');
     typingEl.className = 'msg prof';
@@ -1267,7 +2043,7 @@ function showTyping(on) {
 }
 
 function setSendEnabled(on) {
-  document.getElementById('btn-send').disabled = !on;
+  $('btn-send').disabled = !on;
 }
 
 function autoResize(el) {
@@ -1275,23 +2051,10 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
-let toastTimer = null;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
-}
 
-// HTML escaping
-function esc(s)     { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
-function escLines(s){ return esc(s).replace(/\n/g,'<br>'); }
-
-// ─────────────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════
 //  INIT
-// ─────────────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════
 async function loadRules() {
   try {
     const resp = await fetch('./professor-rules.md?v=' + Date.now());
@@ -1316,14 +2079,8 @@ async function init() {
     }]);
   }
 
-  const hasKey = DB.getClaudeKey() || DB.getApiKey();
-  if (!hasKey) {
-    selectProvider(DB.getProvider());
-    showScreen('setup');
-  } else {
-    renderHome();
-    showScreen('home');
-  }
+  // Always start at the home screen with 3 modes
+  showScreen('home');
 }
 
 init();

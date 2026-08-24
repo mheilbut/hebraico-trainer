@@ -1,0 +1,142 @@
+{
+  "id": "aula-07-beit-tikho",
+  "titulo": "Beit Tikho — Casa, Museu e Plural",
+  "modulo": 3,
+  "aula": 7,
+  "status": "atual",
+  "fonte": "Livro pp. 131 — בית טיכו + singular/plural",
+  "vocab": [
+    { "id": "v-batim",       "heb": "בָּתִּים",       "translit": "batim",       "pt": "casas (pl. de בַּיִת)",          "cat": "substantivos" },
+    { "id": "v-muzeon",      "heb": "מוּזֵאוֹן",      "translit": "muze'on",     "pt": "museu",                          "cat": "substantivos" },
+    { "id": "v-salon",       "heb": "סָלוֹן",         "translit": "salon",       "pt": "sala de estar / salão",          "cat": "substantivos" },
+    { "id": "v-tsiurim",     "heb": "צִיּוּרִים",     "translit": "tsiurim",     "pt": "pinturas / desenhos (pl.)",      "cat": "substantivos" },
+    { "id": "v-harim",       "heb": "הָרִים",         "translit": "harim",       "pt": "montanhas (pl. de הַר)",         "cat": "substantivos" },
+    { "id": "v-etsim",       "heb": "עֵצִים",         "translit": "etsim",       "pt": "árvores (pl.)",                  "cat": "substantivos" },
+    { "id": "v-kheder",      "heb": "חֶדֶר",          "translit": "kheder",      "pt": "quarto / cômodo",                "cat": "substantivos" },
+    { "id": "v-shulkhan",    "heb": "שֻׁלְחָן",       "translit": "shulkhan",    "pt": "mesa",                           "cat": "substantivos" },
+    { "id": "v-khanukiot",   "heb": "חֲנֻכִּיּוֹת",    "translit": "khanukiot",   "pt": "chanukiót (candelabros de Chanucá)", "cat": "substantivos" },
+    { "id": "v-atikot",      "heb": "עַתִּיקוֹת",     "translit": "atikot",      "pt": "antigas (fem. pl.)",             "cat": "adjetivos" },
+    { "id": "v-sfariya07",   "heb": "סִפְרִיָּה",     "translit": "sifriya",     "pt": "biblioteca",                     "cat": "substantivos" },
+    { "id": "v-sfarim",      "heb": "סְפָרִים",       "translit": "sfarim",      "pt": "livros (pl. de סֵפֶר)",          "cat": "substantivos" },
+    { "id": "v-yeshanim",    "heb": "יְשָׁנִים",      "translit": "yeshanim",    "pt": "velhos / antigos (masc. pl.)",   "cat": "adjetivos" },
+    { "id": "v-khadashim",   "heb": "חֲדָשִׁים",      "translit": "khadashim",   "pt": "novos (masc. pl.)",              "cat": "adjetivos" },
+    { "id": "v-khanut",      "heb": "חֲנוּת",         "translit": "khanut",      "pt": "loja",                           "cat": "substantivos" },
+    { "id": "v-misada07",    "heb": "מִסְעָדָה",      "translit": "mis'ada",     "pt": "restaurante",                    "cat": "substantivos" },
+    { "id": "v-salatim",     "heb": "סָלָטִים",       "translit": "salatim",     "pt": "saladas (pl.)",                  "cat": "substantivos" },
+    { "id": "v-sandvichim",  "heb": "סַנְדְוִיצִ׳ים",  "translit": "sandvichim",  "pt": "sanduíches (pl.)",               "cat": "substantivos" },
+    { "id": "v-ugot",        "heb": "עוּגוֹת",        "translit": "ugot",        "pt": "bolos / tortas (pl.)",           "cat": "substantivos" },
+    { "id": "v-gina",        "heb": "גִּינָה",        "translit": "gina",        "pt": "jardim",                         "cat": "substantivos" },
+    { "id": "v-kontserttim",  "heb": "קוֹנְצֶרְטִים",  "translit": "kontsertim",  "pt": "concertos (pl.)",                "cat": "substantivos" },
+    { "id": "v-musika-klasit","heb": "מוּזִיקָה קְלָסִית","translit": "muzika klasit","pt": "música clássica",             "cat": "substantivos" },
+    { "id": "v-lifamim",     "heb": "לִפְעָמִים",     "translit": "lif'amim",    "pt": "às vezes",                       "cat": "adverbios" },
+    { "id": "v-harbe",       "heb": "הַרְבֵּה",       "translit": "harbe",       "pt": "muito / muitos",                 "cat": "adverbios" },
+    { "id": "v-meyukhadim",  "heb": "מְיֻחָדִים",     "translit": "meyukhadim",  "pt": "especiais (masc. pl.)",          "cat": "adjetivos" },
+    { "id": "v-yafim",       "heb": "יָפִים",         "translit": "yafim",       "pt": "bonitos (masc. pl.)",            "cat": "adjetivos" },
+    { "id": "v-gdolim",      "heb": "גְּדוֹלִים",     "translit": "gdolim",      "pt": "grandes (masc. pl.)",            "cat": "adjetivos" },
+    { "id": "v-ktanim",      "heb": "קְטַנִּים",      "translit": "ktanim",      "pt": "pequenos (masc. pl.)",           "cat": "adjetivos" },
+    { "id": "v-dira",        "heb": "דִּירָה",        "translit": "dira",        "pt": "apartamento",                    "cat": "substantivos" },
+    { "id": "v-khalonot",    "heb": "חַלּוֹנוֹת",     "translit": "khalonot",    "pt": "janelas (pl.)",                  "cat": "substantivos" },
+    { "id": "v-mirpeset",    "heb": "מִרְפֶּסֶת",     "translit": "mirpeset",    "pt": "varanda",                        "cat": "substantivos" },
+    { "id": "v-madregot",    "heb": "מַדְרֵגוֹת",     "translit": "madregot",    "pt": "escadas (pl.)",                  "cat": "substantivos" },
+    { "id": "v-melukhlakhim","heb": "מְלֻכְלָכִים",   "translit": "melukhlakhim","pt": "sujos (masc. pl.)",              "cat": "adjetivos" },
+    { "id": "v-nekhmadet",   "heb": "נֶחְמָדָה",      "translit": "nekhmadet",   "pt": "agradável / simpática (fem.)",   "cat": "adjetivos" },
+    { "id": "v-lamashal",    "heb": "לְמָשָׁל",       "translit": "lamashal",    "pt": "por exemplo",                    "cat": "adverbios" }
+  ],
+  "exercicios": [
+    {
+      "id": "ex-01-parear-casa",
+      "tipo": "parear",
+      "instrucao": "Conecte cada palavra à sua tradução:",
+      "pares": [
+        ["מוּזֵאוֹן",    "museu"],
+        ["סָלוֹן",       "sala de estar"],
+        ["חֶדֶר",        "quarto / cômodo"],
+        ["שֻׁלְחָן",     "mesa"],
+        ["סִפְרִיָּה",   "biblioteca"]
+      ]
+    },
+    {
+      "id": "ex-02-parear-plural",
+      "tipo": "parear",
+      "instrucao": "Conecte o singular ao plural:",
+      "pares": [
+        ["בַּיִת",   "בָּתִּים"],
+        ["הַר",      "הָרִים"],
+        ["סֵפֶר",    "סְפָרִים"],
+        ["עוּגָה",   "עוּגוֹת"],
+        ["צִיּוּר",  "צִיּוּרִים"]
+      ]
+    },
+    {
+      "id": "ex-03-lacuna-tikho1",
+      "tipo": "lacuna",
+      "instrucao": "Complete com a palavra correta sobre Beit Tikho:",
+      "template": "בַּסָּלוֹן יֵשׁ ___ יָפִים שֶׁל יְרוּשָׁלַיִם",
+      "traducao": "No salão há ___ bonitos de Jerusalém",
+      "opcoes": ["צִיּוּרִים", "סְפָרִים", "חַלּוֹנוֹת", "שֻׁלְחָנוֹת"],
+      "resposta": "צִיּוּרִים"
+    },
+    {
+      "id": "ex-04-lacuna-tikho2",
+      "tipo": "lacuna",
+      "instrucao": "Complete a frase sobre Beit Tikho:",
+      "template": "יֵשׁ בַּבַּיִת ___ קְטַנָּה עִם סְפָרִים יְשָׁנִים וַחֲדָשִׁים",
+      "traducao": "Na casa há uma ___ pequena com livros velhos e novos",
+      "opcoes": ["סִפְרִיָּה", "מִסְעָדָה", "חֲנוּת", "גִּינָה"],
+      "resposta": "סִפְרִיָּה"
+    },
+    {
+      "id": "ex-05-lacuna-tikho3",
+      "tipo": "lacuna",
+      "instrucao": "O que há no quarto do Doutor Tikho?",
+      "template": "בַּחֶדֶר שֶׁל דוֹקְטוֹר טִיכוֹ יֵשׁ ___ גָּדוֹל",
+      "traducao": "No quarto do Doutor Tikho há uma ___ grande",
+      "opcoes": ["שֻׁלְחָן", "גִּינָה", "מִרְפֶּסֶת", "דִּירָה"],
+      "resposta": "שֻׁלְחָן"
+    },
+    {
+      "id": "ex-06-parear-adjetivos",
+      "tipo": "parear",
+      "instrucao": "Conecte cada adjetivo à sua tradução:",
+      "pares": [
+        ["יְשָׁנִים",    "velhos"],
+        ["חֲדָשִׁים",    "novos"],
+        ["מְיֻחָדִים",   "especiais"],
+        ["גְּדוֹלִים",   "grandes"],
+        ["קְטַנִּים",    "pequenos"]
+      ]
+    },
+    {
+      "id": "ex-07-montar-tikho",
+      "tipo": "montar_frase",
+      "instrucao": "Monte a frase em hebraico:",
+      "frase_pt": "Muitas pessoas vêm ao museu",
+      "frase_heb": "הַרְבֵּה אֲנָשִׁים בָּאִים לַמּוּזֵאוֹן",
+      "banco": [
+        "הַרְבֵּה",
+        "אֲנָשִׁים",
+        "בָּאִים",
+        "לַמּוּזֵאוֹן",
+        "הוֹלְכִים",
+        "לַסִּפְרִיָּה",
+        "לִפְעָמִים"
+      ]
+    },
+    {
+      "id": "ex-08-montar-dira",
+      "tipo": "montar_frase",
+      "instrucao": "Monte a frase em hebraico:",
+      "frase_pt": "No apartamento há janelas grandes",
+      "frase_heb": "בַּדִּירָה יֵשׁ חַלּוֹנוֹת גְּדוֹלִים",
+      "banco": [
+        "בַּדִּירָה",
+        "יֵשׁ",
+        "חַלּוֹנוֹת",
+        "גְּדוֹלִים",
+        "אֵין",
+        "קְטַנִּים",
+        "בַּבַּיִת"
+      ]
+    }
+  ]
+}
