@@ -898,7 +898,7 @@ const R = {
         <div class="ex-type-badge">Múltipla escolha</div>
         <div class="ex-question">O que significa esta palavra?</div>
         <div class="heb-xl">${vocab.heb}</div>
-        <div class="translit">${vocab.translit}</div>
+        <div class="translit" id="translit-reveal" style="visibility:hidden">${vocab.translit}</div>
         <div class="opts" id="opts"></div>`;
       choices.forEach(v => {
         const b = document.createElement('button');
@@ -911,6 +911,7 @@ const R = {
         <div class="ex-type-badge">Múltipla escolha</div>
         <div class="ex-question">Qual é a palavra em hebraico?</div>
         <div style="font-size:1.3rem;text-align:center;margin:16px 0;font-weight:600;">${vocab.pt}</div>
+        <div class="translit" id="translit-reveal" style="display:none">${vocab.translit}</div>
         <div class="opts" id="opts"></div>`;
       choices.forEach(v => {
         const b = document.createElement('button');
@@ -929,6 +930,8 @@ const R = {
         if (ans) ans.classList.add('show-ans');
       }
       $('opts').querySelectorAll('.opt').forEach(b => b.classList.add('disabled'));
+      const tr = $('translit-reveal');
+      if (tr) { tr.style.visibility = 'visible'; tr.style.display = ''; }
       Trainer.recordAnswer(item, correct, correctText);
     }
   },
